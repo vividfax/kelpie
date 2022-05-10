@@ -4,6 +4,20 @@ const mid = "#64b6ac";
 const dark = "#5d737e";
 const black = "#000000";
 
+const palette = {
+	snow: "#EEEEEE",
+	mountain: "#736A55",
+	trees: "#2F8C5F",
+	grass: "#A5C350",
+	sand: "#F2E0A1",
+	water: "#1B6193",
+	river: "#7197DF",
+	white: "#FFFFFF",
+	black: "#4F4F4F",
+	fog: "#A5AAB0",
+	ghosting: "#A5AAB0cc"
+}
+
 let sweep;
 let player;
 let score = 0;
@@ -27,8 +41,15 @@ function setup() {
 
 function draw() {
 
-	background(dark);
+	background(palette.fog);
 	sweep.display();
+
+	if (player.stamina <= 0) {
+		background(palette.ghosting);
+		sweep.displaySurrounding(player.x, player.y);
+		sweep.displayHeartsOnly();
+	}
+
 	player.display();
 
 	push();
@@ -39,16 +60,13 @@ function draw() {
 	textSize(20);
 	textFont("Fira Code");
 
+	if (player.stamina < 0) {
+		player.stamina = 0;
+	}
+
 	text("stamina = " + player.stamina, 0, -sweep.cellSize * sweep.h/2 - 20);
 
 	pop();
-}
-
-function mousePressed() {
-
-	sweep.clicked(mouseX, mouseY);
-
-	draw();
 }
 
 function keyPressed() {
@@ -72,5 +90,6 @@ function keyPressed() {
 
 	sweep.eatCell(player.x, player.y);
 	sweep.clearFog(player.x, player.y);
+
 	draw();
 }
