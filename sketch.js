@@ -15,7 +15,7 @@ const palette = {
 	white: "#FFFFFF",
 	black: "#4F4F4F",
 	fog: "#A5AAB0",
-	ghosting: "#A5AAB0cc"
+	ghosting: "#A5AAB0dd"
 }
 
 let sweep;
@@ -42,7 +42,20 @@ function setup() {
 
 function draw() {
 
-	background(palette.fog);
+	let backgroundColourValue;
+	let backgroundColour;
+
+	if (player.stamina <= 50) {
+		backgroundColourValue = map(player.stamina, 0, 50, 0, 1);
+		backgroundColour = lerpColor(color("#404040"), color("#C8F8FF"), backgroundColourValue);
+	}
+	else {
+		backgroundColourValue = map(player.stamina, 50, 150, 0, 1);
+		backgroundColour = lerpColor(color("#C8F8FF"), color("#FFE37F"), backgroundColourValue);
+	}
+
+	background(backgroundColour);
+
 	sweep.display();
 
 	if (player.stamina <= 0) {
@@ -63,6 +76,10 @@ function draw() {
 
 	if (player.stamina < 0) {
 		player.stamina = 0;
+	}
+
+	if (player.stamina >= 35) {
+		fill(palette.black);
 	}
 
 	text("stamina = " + player.stamina, 0, -sweep.cellSize * sweep.h/2 - 20);

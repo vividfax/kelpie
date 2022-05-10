@@ -146,7 +146,6 @@ class Minesweeper {
         }
         else {
             if (this.grid[x][y] == "❤") {
-                
                 this.grid[x][y] = "♡";
                 score++;
                 player.stamina = 3;
@@ -160,7 +159,7 @@ class Minesweeper {
         translate(this.x - this.w/2*this.cellSize, this.y - this.h/2*this.cellSize);
 
         fill(palette.fog);
-        stroke(white);
+        noStroke();
         rect(0, 0, this.w * this.cellSize, this.h * this.cellSize);
 
         for (let i = 0; i < this.w; i++) {
@@ -324,7 +323,6 @@ class Minesweeper {
                     pop();
                     textSize(this.cellSize * .6);
                     text(number, _x + this.cellSize / 2, _y + this.cellSize / 2 + 2);
-
                 } else {
                     textSize(this.cellSize * .7);
                     text(number, _x + this.cellSize / 2, _y + this.cellSize / 2 + 2);
