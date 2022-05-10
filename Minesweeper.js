@@ -268,6 +268,10 @@ class Minesweeper {
 
                 const _x = i * this.cellSize;
                 const _y = j * this.cellSize;
+
+                if (i >= this.gridWidth-1 || i < 0) continue;
+                if (j >= this.gridHeight-1 || j < 0) continue;
+
                 const number = this.grid[i][j];
 
                 if (number == "❤" || number == "♡") {
