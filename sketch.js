@@ -22,16 +22,25 @@ let sweep;
 let player;
 let score = 0;
 
-let gridWidth = 30;
-let gridHeight = 20;
-let cellSize = 20;
+let worldWidth = 1000;
+let worldHeight = 1000;
+
+let cellSize = 35;
+let gridWidth = 10;
+let gridHeight = 10;
 
 function setup() {
 
 	createCanvas(windowWidth, windowHeight);
 	angleMode(DEGREES);
 
-	sweep = new Minesweeper(gridWidth, gridHeight, cellSize);
+	gridWidth = int(width/cellSize);
+	gridHeight = int(height/cellSize);
+
+	if (gridHeight > worldHeight/2) gridHeight = worldHeight/2;
+	if (gridWidth > worldWidth/2) gridWidth = worldWidth/2;
+
+	sweep = new Minesweeper(worldWidth, worldHeight, gridWidth, gridHeight, cellSize);
 	player = new Player(sweep, cellSize);
 
 	draw();
@@ -56,18 +65,38 @@ function draw() {
 
 	background(backgroundColour);
 
+	// for (let i = -1; i < 2; i++) {
+	// 	for (let j = -1; j < 2; j++) {
+
+	// 		push();
+	// 		translate(i*worldWidth*cellSize, j*worldHeight*cellSize);
+
+			display();
+
+// 			pop();
+// 		}
+// 	}
+}
+
+function display() {
+
+	push();
+	translate(worldWidth*cellSize/2-player.x*cellSize, worldHeight*cellSize/2-player.y*cellSize);
+
 	sweep.display();
 
 	if (player.stamina <= 0) {
-		background(palette.ghosting);
+		rect(0, 0, worldWidth*cellSize, worldHeight*cellSize, palette.ghosting);
 		sweep.displaySurrounding(player.x, player.y);
 		sweep.displayHeartsOnly();
 	}
 
 	player.display();
 
+	pop();
+
 	push();
-	translate(width/2, height/2);
+	translate(width/2, 0);
 
 	fill(white);
 	textAlign(CENTER, CENTER);
@@ -82,7 +111,7 @@ function draw() {
 		fill(palette.black);
 	}
 
-	text("stamina = " + player.stamina, 0, -sweep.cellSize * sweep.h/2 - 20);
+	text("stamina = " + player.stamina, 0, 30);
 
 	pop();
 }

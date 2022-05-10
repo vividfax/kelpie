@@ -19,15 +19,15 @@ class Player {
         let middleX = int(sweep.w/2);
         let middleY = int(sweep.h/2);
 
-        while (sweep.grid[middleX][middleY] != "") {
+        // while (sweep.grid[middleX][middleY] != "") {
 
-            middleX++;
+        //     middleX++;
 
-            if (middleX >= sweep.grid[middleX].length) {
-                middleY++;
-                middleX = 0;
-            }
-        }
+        //     if (middleX >= sweep.grid[middleX].length) {
+        //         middleY++;
+        //         middleX = 0;
+        //     }
+        // }
 
         this.x = middleX;
         this.y = middleY;
@@ -40,7 +40,7 @@ class Player {
             push();
 
             translate(width/2 - this.gridWidth/2*this.cellSize, height/2 - this.gridHeight/2*this.cellSize);
-            translate(this.x*this.cellSize + this.cellSize / 2+10, this.y*this.cellSize + this.cellSize / 2 - 5);
+            translate(this.x*this.cellSize + this.cellSize / 2 + 16/30*this.cellSize, this.y*this.cellSize + this.cellSize / 2 - 7/30*this.cellSize);
             rotate(180);
 
             noStroke();
@@ -68,7 +68,7 @@ class Player {
 
             fill(white);
             textSize(this.cellSize);
-            text(this.symbol, this.x*this.cellSize + this.cellSize / 2-10, this.y*this.cellSize + this.cellSize / 2 + 5);
+            text(this.symbol, this.x*this.cellSize + this.cellSize / 2 - 16/30*this.cellSize, this.y*this.cellSize + this.cellSize / 2 + 7/30*this.cellSize);
 
             pop();
         }
@@ -76,10 +76,12 @@ class Player {
 
     move(x, y) {
 
-        if (this.x + x >= this.gridWidth || this.x + x < 0) return;
-        if (this.y + y >= this.gridHeight || this.y + y < 0) return;
-
         this.x += x;
         this.y += y;
+
+        if (this.x >= this.gridWidth) this.x = 0;
+        if (this.x < 0) this.x = this.gridWidth-1;
+        if (this.y >= this.gridHeight) this.y = 0;
+        if (this.y < 0) this.y = this.gridHeight-1;
     }
 }
