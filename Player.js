@@ -35,25 +35,43 @@ class Player {
 
     display() {
 
-        push();
-        translate(width/2 - this.gridWidth/2*this.cellSize, height/2 - this.gridHeight/2*this.cellSize)
-
         if (player.stamina <= 0) {
-            noFill();
-        } else if (sweep.grid[this.x][this.y] == "♡" || sweep.grid[this.x][this.y] == "") {
-            fill(palette.water);
-        } else if (sweep.grid[this.x][this.y] == "~") {
-            fill(palette.river);
+
+            push();
+
+            translate(width/2 - this.gridWidth/2*this.cellSize, height/2 - this.gridHeight/2*this.cellSize);
+            translate(this.x*this.cellSize + this.cellSize / 2+10, this.y*this.cellSize + this.cellSize / 2 - 5);
+            rotate(180);
+
+            noStroke();
+            fill(white);
+            textSize(this.cellSize);
+            text(this.symbol, 0, 0);
+
+            pop();
+
+        } else {
+
+            push();
+            translate(width/2 - this.gridWidth/2*this.cellSize, height/2 - this.gridHeight/2*this.cellSize);
+
+            if (player.stamina <= 0) {
+                noFill();
+            } else if (sweep.grid[this.x][this.y] == "♡" || sweep.grid[this.x][this.y] == "") {
+                fill(palette.water);
+            } else if (sweep.grid[this.x][this.y] == "~") {
+                fill(palette.river);
+            }
+
+            noStroke();
+            rect(this.x * this.cellSize, this.y * this.cellSize, this.cellSize, this.cellSize);
+
+            fill(white);
+            textSize(this.cellSize);
+            text(this.symbol, this.x*this.cellSize + this.cellSize / 2-10, this.y*this.cellSize + this.cellSize / 2 + 5);
+
+            pop();
         }
-
-        noStroke();
-        rect(this.x * this.cellSize, this.y * this.cellSize, this.cellSize, this.cellSize);
-
-        fill(white);
-        textSize(this.cellSize);
-        text(this.symbol, this.x*this.cellSize + this.cellSize / 2-10, this.y*this.cellSize + this.cellSize / 2 + 5);
-
-        pop();
     }
 
     move(x, y) {

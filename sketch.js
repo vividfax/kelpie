@@ -29,6 +29,7 @@ let cellSize = 20;
 function setup() {
 
 	createCanvas(windowWidth, windowHeight);
+	angleMode(DEGREES);
 
 	sweep = new Minesweeper(gridWidth, gridHeight, cellSize);
 	player = new Player(sweep, cellSize);
