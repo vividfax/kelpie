@@ -76,23 +76,12 @@ function draw() {
 // 			pop();
 // 		}
 // 	}
-}
-
-function display() {
 
 	push();
-	translate(worldWidth*cellSize/2-player.x*cellSize, worldHeight*cellSize/2-player.y*cellSize);
-
-	sweep.display();
-
-	if (player.stamina <= 0) {
-		rect(0, 0, worldWidth*cellSize, worldHeight*cellSize, palette.ghosting);
-		sweep.displaySurrounding(player.x, player.y);
-		sweep.displayHeartsOnly();
-	}
-
-	player.display();
-
+	stroke(backgroundColour);
+	strokeWeight(80);
+	noFill();
+	rect(0,20, width, height-20, 50);
 	pop();
 
 	push();
@@ -112,6 +101,24 @@ function display() {
 	}
 
 	text("stamina = " + player.stamina, 0, 30);
+
+	pop();
+}
+
+function display() {
+
+	push();
+	translate(worldWidth*cellSize/2-player.x*cellSize, worldHeight*cellSize/2-player.y*cellSize);
+
+	sweep.display();
+
+	if (player.stamina <= 0) {
+		rect(0, 0, worldWidth*cellSize, worldHeight*cellSize, palette.ghosting);
+		sweep.displaySurrounding(player.x, player.y);
+		sweep.displayHeartsOnly();
+	}
+
+	player.display();
 
 	pop();
 }

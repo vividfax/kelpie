@@ -184,8 +184,6 @@ class Minesweeper {
         noStroke();
         rect(0, 0, this.w * this.cellSize, this.h * this.cellSize);
 
-        console.log(player.x);
-
         for (let i = player.x-this.gridWidth; i < player.x+this.gridWidth; i++) {
             for (let j = player.y-this.gridHeight; j < player.y+this.gridHeight; j++) {
 
