@@ -113,8 +113,8 @@ function display() {
 	sweep.display();
 
 	if (player.stamina <= 0) {
-		rect(0, 0, worldWidth*cellSize, worldHeight*cellSize, palette.ghosting);
 		sweep.displaySurrounding(player.x, player.y);
+		//rect(0, 0, worldWidth*cellSize, worldHeight*cellSize, palette.ghosting);
 		sweep.displayHeartsOnly();
 	}
 

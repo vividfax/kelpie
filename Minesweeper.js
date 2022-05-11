@@ -251,6 +251,12 @@ class Minesweeper {
                     }
 
                     text(number, x + this.cellSize / 2, y + this.cellSize / 2 + 2);
+
+                    if (player.stamina <= 0) {
+                        noStroke();
+                        fill(palette.ghosting);
+                        rect(x, y, this.cellSize, this.cellSize);
+                    }
                 }
 
             }
@@ -310,6 +316,10 @@ class Minesweeper {
                 if (i >= this.w) targetX = 0;
                 if (j < 0) targetY = this.h-1;
                 if (j >= this.h) targetY = 0;
+
+                if (this.visibility[targetX][targetY] == true) {
+                    continue;
+                }
 
                 const number = this.grid[targetX][targetY];
 
