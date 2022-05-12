@@ -12,6 +12,9 @@ class Player {
         this.stamina = 3;
 
         this.placePlayer(sweep);
+
+        this.positionX = 0;
+        this.positionY = 0;
     }
 
     placePlayer(sweep) {
@@ -83,5 +86,16 @@ class Player {
         if (this.x < 0) this.x = this.gridWidth-1;
         if (this.y >= this.gridHeight) this.y = 0;
         if (this.y < 0) this.y = this.gridHeight-1;
+
+        this.positionX -= x;
+        this.positionY -= y;
+
+        if (this.positionX > gridWidth*0.25 || this.positionX < -gridWidth*0.25) {
+            this.positionX += x;
+        }
+
+        if (this.positionY > gridHeight*0.25 || this.positionY < -gridHeight*0.25) {
+            this.positionY += y;
+        }
     }
 }

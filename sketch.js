@@ -108,7 +108,8 @@ function draw() {
 function display() {
 
 	push();
-	translate(worldWidth*cellSize/2-player.x*cellSize, worldHeight*cellSize/2-player.y*cellSize);
+
+	translate(worldWidth*cellSize/2-(player.x + player.positionX)*cellSize, worldHeight*cellSize/2-(player.y+player.positionY)*cellSize);
 
 	sweep.display();
 
