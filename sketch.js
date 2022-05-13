@@ -33,7 +33,7 @@ let cellSize = 35;
 let gridWidth = 10;
 let gridHeight = 10;
 
-let housePrice = 2;
+let housePrice = 20;
 let houses = [];
 
 function setup() {
@@ -47,8 +47,8 @@ function setup() {
 	if (gridHeight > worldHeight/2) gridHeight = worldHeight/2;
 	if (gridWidth > worldWidth/2) gridWidth = worldWidth/2;
 
-	sweep = new Minesweeper(worldWidth, worldHeight, gridWidth, gridHeight, cellSize);
-	player = new Player(sweep, cellSize);
+	sweep = new Minesweeper(worldWidth, worldHeight, gridWidth, gridHeight);
+	player = new Player(sweep);
 
 	houses.push([player.x, player.y]);
 
@@ -132,8 +132,8 @@ function draw() {
 
 	let hintText = "";
 
-	if (player.stamina > housePrice && sweep.grid[player.x][player.y] != symbols.house && sweep.grid[player.x][player.y] != symbols.emptyHeart) {
-		hintText = "press h to place a house for " + housePrice + " " + symbols.heart;
+	if (player.stamina > housePrice+5 && sweep.grid[player.x][player.y] == "") {
+		hintText = "press h to build a house for " + housePrice + " " + symbols.heart;
 	} else if (houses.length > 1 && sweep.grid[player.x][player.y] == symbols.house) {
 		hintText = "press t to teleport between houses";
 	}
@@ -168,7 +168,7 @@ function display() {
 
 function keyPressed() {
 
-	if (keyCode == 72 && player.stamina > housePrice && sweep.grid[player.x][player.y] != symbols.house && sweep.grid[player.x][player.y] != symbols.emptyHeart) { // h
+	if (keyCode == 72 && player.stamina > housePrice && sweep.grid[player.x][player.y] == "") { // h
 
 		player.stamina -= housePrice;
 		houses.push([player.x, player.y]);

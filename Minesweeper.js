@@ -1,6 +1,6 @@
 class Minesweeper {
 
-    constructor(w, h, _gridWidth, _gridHeight, cellSize) {
+    constructor(w, h, _gridWidth, _gridHeight) {
 
         this.x = width/2;
         this.y = height/2;
@@ -9,7 +9,6 @@ class Minesweeper {
         this.gridWidth = _gridWidth;
         this.gridHeight = _gridHeight;
         this.size = w * h;
-        this.cellSize = cellSize;
         this.density = 0.2;
 
         this.mineGrid = this.createMines();
@@ -193,11 +192,11 @@ class Minesweeper {
     display() {
 
         push();
-        translate(this.x - this.w/2*this.cellSize, this.y - this.h/2*this.cellSize);
+        translate(this.x - this.w/2*cellSize, this.y - this.h/2*cellSize);
 
         fill(palette.fog);
         noStroke();
-        rect(0, 0, this.w * this.cellSize, this.h * this.cellSize);
+        rect(0, 0, this.w * cellSize, this.h * cellSize);
 
         for (let i = player.x-this.gridWidth; i < player.x+this.gridWidth; i++) {
             for (let j = player.y-this.gridHeight; j < player.y+this.gridHeight; j++) {
@@ -210,8 +209,8 @@ class Minesweeper {
                 if (j < 0) targetY = this.h-1;
                 if (j >= this.h) targetY = 0;
 
-                const x = targetX * this.cellSize;
-                const y = targetY * this.cellSize;
+                const x = targetX * cellSize;
+                const y = targetY * cellSize;
                 const number = this.grid[targetX][targetY];
 
                 if (this.visibility[targetX][targetY] == true) {
@@ -235,7 +234,7 @@ class Minesweeper {
                     }
 
                     noStroke();
-                    rect(x, y, this.cellSize, this.cellSize);
+                    rect(x, y, cellSize, cellSize);
 
                     noStroke();
                     textAlign(CENTER, CENTER);
@@ -260,17 +259,17 @@ class Minesweeper {
                     }
 
                     if (number == symbols.heart) {
-                        textSize(this.cellSize * .6);
+                        textSize(cellSize * .6);
                     } else {
-                        textSize(this.cellSize * .7);
+                        textSize(cellSize * .7);
                     }
 
-                    text(number, x + this.cellSize / 2, y + this.cellSize / 2 + 2);
+                    text(number, x + cellSize / 2, y + cellSize / 2 + 2);
 
                     if (player.stamina <= 0) {
                         noStroke();
                         fill(palette.ghosting);
-                        rect(x, y, this.cellSize, this.cellSize);
+                        rect(x, y, cellSize, cellSize);
                     }
                 }
 
@@ -283,7 +282,7 @@ class Minesweeper {
     displayHeartsOnly() {
 
         push();
-        translate(this.x - this.w/2*this.cellSize, this.y - this.h/2*this.cellSize);
+        translate(this.x - this.w/2*cellSize, this.y - this.h/2*cellSize);
 
         for (let i = player.x-this.gridWidth; i < player.x+this.gridWidth; i++) {
             for (let j = player.y-this.gridHeight; j < player.y+this.gridHeight; j++) {
@@ -296,8 +295,8 @@ class Minesweeper {
                 if (j < 0) targetY = this.h-1;
                 if (j >= this.h) targetY = 0;
 
-                const x = targetX * this.cellSize;
-                const y = targetY * this.cellSize;
+                const x = targetX * cellSize;
+                const y = targetY * cellSize;
                 const number = this.grid[targetX][targetY];
 
                 if (this.visibility[targetX][targetY] == true) {
@@ -306,8 +305,8 @@ class Minesweeper {
                         textAlign(CENTER, CENTER);
                         fill(palette.white);
                         noStroke();
-                        textSize(this.cellSize * .6);
-                        text(number, x + this.cellSize / 2, y + this.cellSize / 2 + 2);
+                        textSize(cellSize * .6);
+                        text(number, x + cellSize / 2, y + cellSize / 2 + 2);
                     }
                 }
             }
@@ -319,7 +318,7 @@ class Minesweeper {
     displaySurrounding(x, y) {
 
         push();
-        translate(this.x - this.w/2*this.cellSize, this.y - this.h/2*this.cellSize);
+        translate(this.x - this.w/2*cellSize, this.y - this.h/2*cellSize);
 
         for (let i = x-1; i < x+2; i++) {
             for (let j = y-1; j < y+2; j++) {
@@ -338,8 +337,8 @@ class Minesweeper {
 
                 const number = this.grid[targetX][targetY];
 
-                const _x = targetX * this.cellSize;
-                const _y = targetY * this.cellSize;
+                const _x = targetX * cellSize;
+                const _y = targetY * cellSize;
 
                 if (number == symbols.heart || number == symbols.emptyHeart) {
                     fill(palette.water);
@@ -360,7 +359,7 @@ class Minesweeper {
                 }
 
                 noStroke();
-                rect(_x, _y, this.cellSize, this.cellSize);
+                rect(_x, _y, cellSize, cellSize);
 
                 noStroke();
                 textAlign(CENTER, CENTER);
@@ -384,10 +383,10 @@ class Minesweeper {
                     noFill();
                 }
 
-                textSize(this.cellSize * .7);
-                text(number, _x + this.cellSize / 2, _y + this.cellSize / 2 + 2);
+                textSize(cellSize * .7);
+                text(number, _x + cellSize / 2, _y + cellSize / 2 + 2);
                 fill(palette.ghosting);
-                rect(_x, _y, this.cellSize, this.cellSize);
+                rect(_x, _y, cellSize, cellSize);
             }
         }
         pop();

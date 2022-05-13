@@ -1,15 +1,15 @@
 class Player {
 
-    constructor(sweep, cellSize) {
+    constructor(sweep) {
 
         this.symbol = symbols.smiley;
         this.x;
         this.y;
         this.gridWidth = sweep.w;
         this.gridHeight = sweep.h;
-        this.cellSize = cellSize;
 
         this.stamina = 5;
+        this.steps = 1;
 
         this.placePlayer(sweep);
 
@@ -39,6 +39,12 @@ class Player {
         this.cameraX -= x;
         this.cameraY -= y;
 
+        let progress = player.stamina;
+
+        if (player.stamina > 20) {
+            progress = 20;
+        }
+
         if (this.cameraX > gridWidth*0.25 || this.cameraX < -gridWidth*0.25) {
             this.cameraX += x;
         }
@@ -46,6 +52,8 @@ class Player {
         if (this.cameraY > gridHeight*0.25 || this.cameraY < -gridHeight*0.25) {
             this.cameraY += y;
         }
+
+        this.steps++;
     }
 
     display() {
@@ -54,13 +62,13 @@ class Player {
 
             push();
 
-            translate(width/2 - this.gridWidth/2*this.cellSize, height/2 - this.gridHeight/2*this.cellSize);
-            translate(this.x*this.cellSize + this.cellSize / 2 + 16/30*this.cellSize, this.y*this.cellSize + this.cellSize / 2 - 7/30*this.cellSize);
+            translate(width/2 - this.gridWidth/2*cellSize, height/2 - this.gridHeight/2*cellSize);
+            translate(this.x*cellSize + cellSize / 2 + 16/30*cellSize, this.y*cellSize + cellSize / 2 - 7/30*cellSize);
             rotate(180);
 
             noStroke();
             fill(palette.white);
-            textSize(this.cellSize);
+            textSize(cellSize);
             text(this.symbol, 0, 0);
 
             pop();
@@ -68,7 +76,7 @@ class Player {
         } else {
 
             push();
-            translate(width/2 - this.gridWidth/2*this.cellSize, height/2 - this.gridHeight/2*this.cellSize);
+            translate(width/2 - this.gridWidth/2*cellSize, height/2 - this.gridHeight/2*cellSize);
 
             if (player.stamina <= 0) {
                 noFill();
@@ -79,11 +87,11 @@ class Player {
             }
 
             noStroke();
-            rect(this.x * this.cellSize, this.y * this.cellSize, this.cellSize, this.cellSize);
+            rect(this.x * cellSize, this.y * cellSize, cellSize, cellSize);
 
             fill(palette.white);
-            textSize(this.cellSize);
-            text(this.symbol, this.x*this.cellSize + this.cellSize / 2 - 16/30*this.cellSize, this.y*this.cellSize + this.cellSize / 2 + 7/30*this.cellSize);
+            textSize(cellSize);
+            text(this.symbol, this.x*cellSize + cellSize / 2 - 16/30*cellSize, this.y*cellSize + cellSize / 2 + 7/30*cellSize);
 
             pop();
         }
