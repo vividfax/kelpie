@@ -1,9 +1,3 @@
-const white = "#ffffff";
-const light = "#EAF2F1";
-const mid = "#64b6ac";
-const dark = "#5d737e";
-const black = "#000000";
-
 const palette = {
 	snow: "#EEEEEE",
 	mountain: "#736A55",
@@ -16,11 +10,21 @@ const palette = {
 	black: "#4F4F4F",
 	fog: "#A5AAB0",
 	ghosting: "#A5AAB0dd"
-}
+};
+
+const symbols = {
+	smiley: "☻",
+	emptySmiley: "☺",
+	heart: "❤",
+	emptyHeart: "♡",
+	house: "☗",
+	emptyHouse: "☖",
+	river: "~"
+};
 
 let sweep;
 let player;
-let score = 0;
+let dead;
 
 let worldWidth = 1000;
 let worldHeight = 1000;
@@ -28,6 +32,9 @@ let worldHeight = 1000;
 let cellSize = 35;
 let gridWidth = 10;
 let gridHeight = 10;
+
+let housePrice = 2;
+let houses = [];
 
 function setup() {
 
@@ -42,6 +49,12 @@ function setup() {
 
 	sweep = new Minesweeper(worldWidth, worldHeight, gridWidth, gridHeight, cellSize);
 	player = new Player(sweep, cellSize);
+
+	houses.push([player.x, player.y]);
+
+	for (let i = 0; i < houses.length; i++) {
+		sweep.placeHouse(houses[i][0], houses[i][1]);
+	}
 
 	draw();
 	sweep.clearFog(player.x, player.y);
@@ -81,13 +94,13 @@ function draw() {
 	stroke(backgroundColour);
 	strokeWeight(80);
 	noFill();
-	rect(0,20, width, height-20, 50);
+	rect(0,20, width, height-40, 50);
 	pop();
 
 	push();
 	translate(width/2, 0);
 
-	fill(white);
+	fill(palette.white);
 	textAlign(CENTER, CENTER);
 	textSize(20);
 	textFont("Fira Code");
@@ -100,7 +113,32 @@ function draw() {
 		fill(palette.black);
 	}
 
-	text("stamina = " + player.stamina, 0, 30);
+	let staminaString = "";
+
+	for (let i = 0; i < player.stamina; i++) {
+		staminaString += symbols.heart;
+	}
+
+	if (player.stamina >= housePrice) {
+
+		staminaString += " = ";
+
+		for (let i = housePrice-1; i < player.stamina; i += housePrice) {
+			staminaString += symbols.house;
+		}
+	}
+
+	text(staminaString, 0, 30);
+
+	let hintText = "";
+
+	if (player.stamina > housePrice && sweep.grid[player.x][player.y] != symbols.house && sweep.grid[player.x][player.y] != symbols.emptyHeart) {
+		hintText = "press h to place a house for " + housePrice + " " + symbols.heart;
+	} else if (houses.length > 1 && sweep.grid[player.x][player.y] == symbols.house) {
+		hintText = "press t to teleport between houses";
+	}
+
+	text(hintText, 0, height - 30);
 
 	pop();
 }
@@ -109,14 +147,18 @@ function display() {
 
 	push();
 
-	translate(worldWidth*cellSize/2-(player.x + player.positionX)*cellSize, worldHeight*cellSize/2-(player.y+player.positionY)*cellSize);
+	translate(worldWidth*cellSize/2-(player.x + player.cameraX)*cellSize, worldHeight*cellSize/2-(player.y+player.cameraY)*cellSize);
 
 	sweep.display();
+
+	for (let i = 0; i < houses.length; i++) {
+		sweep.placeHouse(houses[i][0], houses[i][1]);
+	}
 
 	if (player.stamina <= 0) {
 		sweep.displaySurrounding(player.x, player.y);
 		//rect(0, 0, worldWidth*cellSize, worldHeight*cellSize, palette.ghosting);
-		sweep.displayHeartsOnly();
+		//sweep.displayHeartsOnly();
 	}
 
 	player.display();
@@ -126,7 +168,35 @@ function display() {
 
 function keyPressed() {
 
-	if (keyCode == UP_ARROW || keyCode == 87) {
+	if (keyCode == 72 && player.stamina > housePrice && sweep.grid[player.x][player.y] != symbols.house && sweep.grid[player.x][player.y] != symbols.emptyHeart) { // h
+
+		player.stamina -= housePrice;
+		houses.push([player.x, player.y]);
+
+		for (let i = 0; i < houses.length; i++) {
+			sweep.placeHouse(houses[i][0], houses[i][1]);
+		}
+	} else if (keyCode == 84) { // t
+
+		let houseIndex = -1;
+
+		for (let i = 0; i < houses.length; i++) {
+			if (houses[i][0] == player.x && houses[i][1] == player.y) {
+				houseIndex = i;
+				break;
+			}
+		}
+
+		if (houseIndex != -1) {
+			houseIndex++;
+			if (houseIndex >= houses.length) {
+				houseIndex = 0;
+			}
+		}
+
+		player.x = houses[houseIndex][0];
+		player.y = houses[houseIndex][1];
+	} else if (keyCode == UP_ARROW || keyCode == 87) {
 
 		player.move(0, -1);
 	} else if (keyCode == DOWN_ARROW || keyCode == 83) {
@@ -146,5 +216,25 @@ function keyPressed() {
 	sweep.eatCell(player.x, player.y);
 	sweep.clearFog(player.x, player.y);
 
+	if (dead) {
+		reset();
+	}
+
+	if (player.stamina <= 0) {
+		dead = true;
+	}
+
+	draw();
+}
+
+function reset() {
+
+	dead = false;
+	player.stamina = 5;
+	player.placePlayer(sweep);
+	sweep.reset();
+	sweep.clearFog(player.x, player.y);
+	player.cameraX = 0;
+	player.cameraY = 0;
 	draw();
 }
