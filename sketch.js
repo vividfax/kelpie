@@ -29,7 +29,7 @@ let dead;
 let worldWidth = 1000;
 let worldHeight = 1000;
 
-let cellSize = 35;
+let cellSize = 45;
 let gridWidth = 10;
 let gridHeight = 10;
 
