@@ -201,7 +201,6 @@ nothing
 notorious
 oil
 old
-open
 origin
 outwit
 overpower
@@ -237,7 +236,6 @@ remove
 render
 repeat
 report
-result
 retributive
 return
 revert

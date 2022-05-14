@@ -136,8 +136,12 @@ function draw() {
 
 	let hintText = "";
 
-	if (dead) {
-		hintText = "move to respawn";
+	console.log(frameCount);
+
+	if (frameCount == 2) {
+		hintText = "wasd or arrow keys to walk";
+	} else if (dead) {
+		hintText = "walk to respawn";
 	} else if (player.stamina >= housePrice && sweep.grid[player.x][player.y] == "") {
 		hintText = "press h to build a house for " + housePrice + " " + symbols.heart;
 	} else if (houses.length > 1 && sweep.grid[player.x][player.y] == symbols.house) {
@@ -163,6 +167,8 @@ function draw() {
 	text(hintText, 0, height - 30);
 
 	pop();
+
+	frameCount++;
 }
 
 function display() {

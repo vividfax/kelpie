@@ -86,13 +86,18 @@ class Minesweeper {
         for (let i = 0; i < this.w; i++) {
             for (let j = 0; j < this.h; j++) {
 
-                if (grid[i][j] == symbols.heart) {
-                    continue;
-                }
+                // if (grid[i][j][0] == symbols.heart) {
+                //     continue;
+                // }
                 const neighbours = this.getNeighbours(gridCache, i, j);
 
                 if (neighbours != 0) {
-                    grid[i][j] = neighbours;
+
+                    if (grid[i][j] == symbols.heart) {
+                        grid[i][j] += neighbours;
+                    } else {
+                        grid[i][j] = neighbours;
+                    }
                 }
             }
         }
@@ -118,11 +123,16 @@ class Minesweeper {
                 if (j < 0) targetY = this.h-1;
                 if (j >= this.h) targetY = 0;
 
-                if (grid[targetX][targetY] == symbols.heart) {
+                if (grid[targetX][targetY] != null && grid[targetX][targetY].toString().includes(symbols.heart)) {
+
+                //if (grid[targetX][targetY] == symbols.heart) {
                     neighbours += 1;
                 }
             }
         }
+
+        if (grid[x][y] == symbols.heart) neighbours += 1;
+
         return neighbours;
     }
 
@@ -181,7 +191,7 @@ class Minesweeper {
         if (this.grid[x][y] == symbols.envelope || this.grid[x][y] == symbols.openedLetter) {
 
         } else if (player.stamina > 0) {
-            if (this.grid[x][y] == symbols.heart) {
+            if (this.grid[x][y][0] == symbols.heart) {
 
                 this.grid[x][y] = symbols.emptyHeart;
                 player.stamina += 2;
@@ -193,7 +203,7 @@ class Minesweeper {
             }
         }
         // else {
-        //     if (this.grid[x][y] == symbols.heart) {
+        //     if (this.grid[x][y][0] == symbols.heart) {
         //         this.grid[x][y] = symbols.emptyHeart;
         //         score++;
         //         player.stamina = 3;
@@ -240,21 +250,21 @@ class Minesweeper {
 
                 if (this.visibility[targetX][targetY] == true) {
 
-                    if (number == symbols.heart || number == symbols.emptyHeart || number == symbols.house) {
+                    if (number == symbols.house) {
                         fill(palette.water);
                     } else if (number == "") {
                         fill(palette.water);
-                    } else if (number == 1) {
+                    } else if (number.toString().includes("1")) {
                         fill(palette.sand);
-                    } else if (number == 2) {
+                    } else if (number.toString().includes("2")) {
                         fill(palette.grass);
-                    } else if (number == 3) {
+                    } else if (number.toString().includes("3")) {
                         fill(palette.trees);
-                    } else if (number == 4) {
+                    } else if (number.toString().includes("4")) {
                         fill(palette.mountain);
-                    } else if (number >= 5) {
+                    } else if (number.toString().includes("5") || number.toString().includes("6") || number.toString().includes("7") || number.toString().includes("8")) {
                         fill(palette.snow);
-                    } else if (number == symbols.river) {
+                    } else if (number == symbols.river || number == symbols.emptyHeart) {
                         fill(palette.river)
                     } else if (number == symbols.wall) {
                         fill(palette.wall)
@@ -269,35 +279,35 @@ class Minesweeper {
                     textAlign(CENTER, CENTER);
                     textFont("Fira Code");
 
-                    if (number == symbols.heart || number == symbols.emptyHeart || number == symbols.house) {
+                    if (number == symbols.house) {
                         fill(palette.white);
                     } else if (number == "") {
                         fill(palette.white);
-                    } else if (number == 1) {
+                    } else if (number.toString().includes("1")) {
                         fill(palette.black);
-                    } else if (number == 2) {
+                    } else if (number.toString().includes("2")) {
                         fill(palette.black);
-                    } else if (number == 3) {
+                    } else if (number.toString().includes("3")) {
                         fill(palette.white);
-                    } else if (number == 4) {
+                    } else if (number.toString().includes("4")) {
                         fill(palette.white);
-                    } else if (number >= 5) {
+                    } else if (number.toString().includes("5") || number.toString().includes("6") || number.toString().includes("7") || number.toString().includes("8")) {
                         fill(palette.black);
                     } else if (number == symbols.river) {
                         noFill();
                     } else if (number == symbols.wall) {
                         fill(palette.black);
-                    } else if (number == symbols.envelope || number == symbols.openedLetter) {
+                    } else if (number == symbols.envelope || number == symbols.openedLetter || number == symbols.emptyHeart) {
                         fill(palette.white)
                     }
 
-                    if (number == symbols.heart) {
+                    if (number[0] == symbols.heart) {
                         textSize(cellSize * .6);
                     } else {
                         textSize(cellSize * .7);
                     }
 
-                    text(number, x + cellSize / 2, y + cellSize / 2 + 2);
+                    text(number.toString()[0], x + cellSize / 2, y + cellSize / 2 + 2);
 
                     if (player.stamina <= 0) {
                         noStroke();
@@ -333,7 +343,7 @@ class Minesweeper {
 
                 if (this.visibility[targetX][targetY] == true) {
 
-                    if (number == symbols.heart) {
+                    if (number[0] == symbols.heart) {
                         textAlign(CENTER, CENTER);
                         fill(palette.white);
                         noStroke();
@@ -372,7 +382,7 @@ class Minesweeper {
                 const _x = targetX * cellSize;
                 const _y = targetY * cellSize;
 
-                if (number == symbols.heart || number == symbols.emptyHeart) {
+                if (number[0] == symbols.heart || number == symbols.emptyHeart) {
                     fill(palette.water);
                 } else if (number == "") {
                     fill(palette.water);
@@ -397,7 +407,7 @@ class Minesweeper {
                 textAlign(CENTER, CENTER);
                 textFont("Fira Code");
 
-                if (number == symbols.heart || number == symbols.emptyHeart) {
+                if (number[0] == symbols.heart || number == symbols.emptyHeart) {
                     fill(palette.white);
                 } else if (number == "") {
                     fill(palette.white);
