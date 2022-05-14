@@ -41,11 +41,11 @@ class Player {
         this.cameraX -= x;
         this.cameraY -= y;
 
-        let progress = player.stamina;
+        // let progress = player.stamina;
 
-        if (player.stamina > 20) {
-            progress = 20;
-        }
+        // if (player.stamina > 20) {
+        //     progress = 20;
+        // }
 
         if (this.cameraX > gridWidth*0.25 || this.cameraX < -gridWidth*0.25) {
             this.cameraX += x;
@@ -82,7 +82,7 @@ class Player {
 
             if (player.stamina <= 0) {
                 noFill();
-            } else if (sweep.grid[this.x][this.y] == symbols.emptyHeart || sweep.grid[this.x][this.y] == "" || sweep.grid[this.x][this.y] == symbols.house) {
+            } else if (sweep.grid[this.x][this.y] == symbols.emptyHeart || sweep.grid[this.x][this.y] == "" || sweep.grid[this.x][this.y] == symbols.house || sweep.grid[this.x][this.y] == symbols.envelope || sweep.grid[this.x][this.y] == symbols.openedLetter) {
                 fill(palette.water);
             } else if (sweep.grid[this.x][this.y] == symbols.river) {
                 fill(palette.river);

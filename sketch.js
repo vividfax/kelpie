@@ -22,12 +22,17 @@ const symbols = {
 	emptyHouse: "☖",
 	river: "~",
 	wall: "▞",
+	envelope: "✉",
+	openedLetter: "≋"
 };
 
 let sweep;
 let player;
 let walls;
 let dead;
+let chests = [];
+let kelpieWords = [];
+let commonWords = [];
 
 let worldWidth = 1000;
 let worldHeight = 1000;
@@ -35,9 +40,20 @@ let worldHeight = 1000;
 let cellSize = 45;
 let gridWidth = 10;
 let gridHeight = 10;
+let mapScale = 1;
+
+let hasBuiltHouse;
 
 let housePrice = 20;
 let houses = [];
+
+function preload(){
+
+	kelpieWords = loadStrings("kelpie-words.txt");
+	kelpieWords.pop();
+	commonWords = loadStrings("common.txt");
+	commonWords.pop();
+}
 
 function setup() {
 
@@ -68,19 +84,7 @@ function setup() {
 
 function draw() {
 
-	let backgroundColourValue;
-	let backgroundColour;
-
-	if (player.stamina <= 50) {
-		backgroundColourValue = map(player.stamina, 0, 50, 0, 1);
-		backgroundColour = lerpColor(color("#404040"), color("#C8F8FF"), backgroundColourValue);
-	}
-	else {
-		backgroundColourValue = map(player.stamina, 50, 150, 0, 1);
-		backgroundColour = lerpColor(color("#C8F8FF"), color("#FFE37F"), backgroundColourValue);
-	}
-
-	background(backgroundColour);
+	background(palette.black);
 
 	// for (let i = -1; i < 2; i++) {
 	// 	for (let j = -1; j < 2; j++) {
@@ -95,7 +99,7 @@ function draw() {
 // 	}
 
 	push();
-	stroke(backgroundColour);
+	stroke(palette.black);
 	strokeWeight(80);
 	noFill();
 	rect(0,20, width, height-40, 50);
@@ -113,10 +117,6 @@ function draw() {
 		player.stamina = 0;
 	}
 
-	if (player.stamina >= 35) {
-		fill(palette.black);
-	}
-
 	let staminaString = "";
 
 	for (let i = 0; i < player.stamina; i++) {
@@ -125,7 +125,7 @@ function draw() {
 
 	if (player.stamina >= housePrice) {
 
-		staminaString += " = ";
+		staminaString += "\n= ";
 
 		for (let i = housePrice-1; i < player.stamina; i += housePrice) {
 			staminaString += symbols.house;
@@ -142,6 +142,22 @@ function draw() {
 		hintText = "press h to build a house for " + housePrice + " " + symbols.heart;
 	} else if (houses.length > 1 && sweep.grid[player.x][player.y] == symbols.house) {
 		hintText = "press t to fast travel between houses";
+	} else if (sweep.grid[player.x][player.y] == symbols.envelope || sweep.grid[player.x][player.y] == symbols.openedLetter) {
+
+		for (let i = 0; i < chests.length; i++) {
+			if (chests[i].x == player.x && chests[i].y == player.y) {
+
+				hintText = chests[i].words;
+
+				if (chests[i].opened) {
+				} else if (player.stamina < chests[i].price) {
+					hintText = "you need " + chests[i].price + " " + symbols.heart + " to open this";
+				} else {
+					hintText = "press o to open for " + chests[i].price + " " + symbols.heart;
+				}
+				break;
+			}
+		}
 	}
 
 	text(hintText, 0, height - 30);
@@ -153,7 +169,17 @@ function display() {
 
 	push();
 
-	translate(worldWidth*cellSize/2-(player.x + player.cameraX)*cellSize, worldHeight*cellSize/2-(player.y+player.cameraY)*cellSize);
+	if (sweep.grid[player.x][player.y] == symbols.house && hasBuiltHouse) {
+		mapScale = 0.5;
+		scale(mapScale);
+		translate(worldWidth*cellSize/2-(player.x)*cellSize, worldHeight*cellSize/2-(player.y)*cellSize);
+		translate(width/2, height/2);
+
+	}
+	else {
+		mapScale = 1;
+		translate(worldWidth*cellSize/2-(player.x + player.cameraX)*cellSize, worldHeight*cellSize/2-(player.y+player.cameraY)*cellSize);
+	}
 
 	sweep.display();
 
@@ -182,6 +208,9 @@ function keyPressed() {
 		for (let i = 0; i < houses.length; i++) {
 			sweep.placeHouse(houses[i][0], houses[i][1]);
 		}
+
+		hasBuiltHouse = true;
+
 	} else if (keyCode == 84) { // t
 
 		let houseIndex = -1;
@@ -202,6 +231,14 @@ function keyPressed() {
 
 		player.x = houses[houseIndex][0];
 		player.y = houses[houseIndex][1];
+
+	}  else if (keyCode == 79 && sweep.grid[player.x][player.y] == symbols.envelope) { // t
+
+		for (let i = 0; i < chests.length; i++) {
+			if (chests[i].x == player.x && chests[i].y == player.y) {
+				chests[i].open();
+			}
+		}
 
 	} else if (keyCode == UP_ARROW || keyCode == 87) {
 		player.move(0, -1);

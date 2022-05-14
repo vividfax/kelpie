@@ -9,7 +9,6 @@ class Walls {
         this.updateCells();
         this.updateCells();
         this.updateCells();
-        this.updateCells();
     }
 
     create() {
@@ -19,7 +18,7 @@ class Walls {
         for (let i = 0; i < this.cells.length; i++) {
             for (let j = 0; j < this.cells[i].length; j++) {
 
-                if (int(random(12)) == 1) {
+                if (int(random(8)) == 1) {
                     this.cells[i][j] = true;
                 } else {
                     this.cells[i][j] = false;
