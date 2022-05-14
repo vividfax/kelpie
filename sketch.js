@@ -9,7 +9,8 @@ const palette = {
 	white: "#FFFFFF",
 	black: "#4F4F4F",
 	fog: "#A5AAB0",
-	ghosting: "#A5AAB0dd"
+	ghosting: "#A5AAB0dd",
+	wall: "#333333"
 };
 
 const symbols = {
@@ -19,11 +20,13 @@ const symbols = {
 	emptyHeart: "♡",
 	house: "☗",
 	emptyHouse: "☖",
-	river: "~"
+	river: "~",
+	wall: "▞",
 };
 
 let sweep;
 let player;
+let walls;
 let dead;
 
 let worldWidth = 1000;
@@ -47,7 +50,8 @@ function setup() {
 	if (gridHeight > worldHeight/2) gridHeight = worldHeight/2;
 	if (gridWidth > worldWidth/2) gridWidth = worldWidth/2;
 
-	sweep = new Minesweeper(worldWidth, worldHeight, gridWidth, gridHeight);
+	walls = new Walls(worldWidth, worldHeight);
+	sweep = new Minesweeper(worldWidth, worldHeight, gridWidth, gridHeight, walls);
 	player = new Player(sweep);
 
 	houses.push([player.x, player.y]);
@@ -132,10 +136,12 @@ function draw() {
 
 	let hintText = "";
 
-	if (player.stamina > housePrice+5 && sweep.grid[player.x][player.y] == "") {
+	if (dead) {
+		hintText = "move to respawn";
+	} if (player.stamina > housePrice+5 && sweep.grid[player.x][player.y] == "") {
 		hintText = "press h to build a house for " + housePrice + " " + symbols.heart;
 	} else if (houses.length > 1 && sweep.grid[player.x][player.y] == symbols.house) {
-		hintText = "press t to teleport between houses";
+		hintText = "press t to fast travel between houses";
 	}
 
 	text(hintText, 0, height - 30);
@@ -196,17 +202,14 @@ function keyPressed() {
 
 		player.x = houses[houseIndex][0];
 		player.y = houses[houseIndex][1];
-	} else if (keyCode == UP_ARROW || keyCode == 87) {
 
+	} else if (keyCode == UP_ARROW || keyCode == 87) {
 		player.move(0, -1);
 	} else if (keyCode == DOWN_ARROW || keyCode == 83) {
-
 		player.move(0, 1);
 	} else if (keyCode == LEFT_ARROW || keyCode == 65) {
-
 		player.move(-1, 0);
 	} else if (keyCode == RIGHT_ARROW || keyCode == 68) {
-
 		player.move(1, 0);
 	}
 	else {

@@ -28,6 +28,8 @@ class Player {
 
     move(x, y) {
 
+        if (sweep.grid[this.x+x][this.y+y] == symbols.wall) return;
+
         this.x += x;
         this.y += y;
 

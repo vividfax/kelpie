@@ -1,6 +1,6 @@
 class Minesweeper {
 
-    constructor(w, h, _gridWidth, _gridHeight) {
+    constructor(w, h, _gridWidth, _gridHeight, walls) {
 
         this.x = width/2;
         this.y = height/2;
@@ -11,6 +11,7 @@ class Minesweeper {
         this.size = w * h;
         this.density = 0.2;
 
+        this.walls = walls.cells;
         this.mineGrid = this.createMines();
         this.grid = JSON.parse(JSON.stringify(this.mineGrid));
         this.grid = this.getClues(this.grid);
@@ -46,12 +47,19 @@ class Minesweeper {
             }
         }
 
-        for (let i = -1; i < 2; i++) {
-            for (let j = -1; j < 2; j++) {
+        for (let i = 0; i < this.w; i++) {
+            for (let j = 0; j < this.h; j++) {
+                if (this.walls[i][j]) {
+                    newGrid[i][j] = symbols.wall;
+                }
+            }
+        }
+
+        for (let i = -2; i < 3; i++) {
+            for (let j = -2; j < 3; j++) {
                 newGrid[int(this.w/2)+i][int(this.h/2)+j] = "";
             }
         }
-        newGrid[int(this.w/2)][int(this.h/2)] = "";
 
         return newGrid;
     }
@@ -145,7 +153,7 @@ class Minesweeper {
                 if (!this.visibility[targetX][targetY]) {
                     this.visibility[targetX][targetY] = true;
 
-                    if (this.grid[targetX][targetY] == "" || this.grid[targetX][targetY] == symbols.river) {
+                    if (this.grid[targetX][targetY] == "" || this.grid[targetX][targetY] == symbols.river || this.grid[targetX][targetY] == symbols.wall) {
                         this.clearNeighbours(targetX, targetY);
                     }
                 }
@@ -231,6 +239,8 @@ class Minesweeper {
                         fill(palette.snow);
                     } else if (number == symbols.river) {
                         fill(palette.river)
+                    } else if (number == symbols.wall) {
+                        fill(palette.wall)
                     }
 
                     noStroke();
@@ -256,6 +266,8 @@ class Minesweeper {
                         fill(palette.black);
                     } else if (number == symbols.river) {
                         noFill();
+                    } else if (number == symbols.wall) {
+                        fill(palette.black);
                     }
 
                     if (number == symbols.heart) {
@@ -272,7 +284,6 @@ class Minesweeper {
                         rect(x, y, cellSize, cellSize);
                     }
                 }
-
             }
         }
 
