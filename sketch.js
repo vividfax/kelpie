@@ -138,7 +138,7 @@ function draw() {
 
 	if (dead) {
 		hintText = "move to respawn";
-	} if (player.stamina > housePrice+5 && sweep.grid[player.x][player.y] == "") {
+	} else if (player.stamina >= housePrice && sweep.grid[player.x][player.y] == "") {
 		hintText = "press h to build a house for " + housePrice + " " + symbols.heart;
 	} else if (houses.length > 1 && sweep.grid[player.x][player.y] == symbols.house) {
 		hintText = "press t to fast travel between houses";
@@ -200,7 +200,7 @@ function display() {
 
 function keyPressed() {
 
-	if (keyCode == 72 && player.stamina > housePrice && sweep.grid[player.x][player.y] == "") { // h
+	if (keyCode == 72 && player.stamina >= housePrice && sweep.grid[player.x][player.y] == "") { // h
 
 		player.stamina -= housePrice;
 		houses.push([player.x, player.y]);
