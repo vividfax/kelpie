@@ -241,6 +241,7 @@ function draw() {
 function display() {
 
 	push();
+	translate(-cellSize/2, -cellSize/2);
 
 	if (sweep.grid[player.x][player.y] == symbols.house && hasBuiltHouse && !isInRoom) {
 		mapScale = 0.5;
