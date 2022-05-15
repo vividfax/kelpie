@@ -48,6 +48,8 @@ let housePrice = 20;
 let houses = [];
 
 let lastMoveWasDiagonal = false;
+let displayJumpTooltip = false;
+let hasMoved = false;
 
 function preload(){
 
@@ -82,6 +84,16 @@ function setup() {
 	sweep.clearFog(player.x, player.y);
 
 	noLoop();
+
+	document.onfocus = function() {focus()};
+}
+
+function focus() {
+
+	if (hasMoved) {
+		displayJumpTooltip = true;
+		draw();
+	}
 }
 
 function draw() {
@@ -138,8 +150,10 @@ function draw() {
 
 	let hintText = "";
 
-	if (frameCount == 2) {
+	if (!hasMoved) {
 		hintText = "wasd or arrow keys to walk";
+	} else if (displayJumpTooltip) {
+		hintText = "press spacebar to jump";
 	} else if (dead) {
 		hintText = "press any key to respawn";
 	} else if (player.stamina >= housePrice && sweep.grid[player.x][player.y] == "") {
@@ -169,6 +183,7 @@ function draw() {
 	pop();
 
 	frameCount++;
+	console.log("hi")
 }
 
 function display() {
@@ -206,24 +221,13 @@ function display() {
 
 function keyPressed() {
 
+	displayJumpTooltip = false;
+
 	if (dead) return;
 
 	if (keyCode == 32) {
 		player.wiggle = -cellSize/9;
-		push();
-		if (sweep.grid[player.x][player.y] == symbols.house && hasBuiltHouse) {
-			mapScale = 0.5;
-			scale(mapScale);
-			translate(worldWidth*cellSize/2-(player.x)*cellSize, worldHeight*cellSize/2-(player.y)*cellSize);
-			translate(width/2, height/2);
-
-		}
-		else {
-			mapScale = 1;
-			translate(worldWidth*cellSize/2-(player.x + player.cameraX)*cellSize, worldHeight*cellSize/2-(player.y+player.cameraY)*cellSize);
-		}
-		player.display()
-		pop();
+		draw();
 	}
 }
 
@@ -236,20 +240,7 @@ function keyReleased() {
 
 	if (keyCode == 32) {
 		player.wiggle = 0;
-		push();
-		if (sweep.grid[player.x][player.y] == symbols.house && hasBuiltHouse) {
-			mapScale = 0.5;
-			scale(mapScale);
-			translate(worldWidth*cellSize/2-(player.x)*cellSize, worldHeight*cellSize/2-(player.y)*cellSize);
-			translate(width/2, height/2);
-
-		}
-		else {
-			mapScale = 1;
-			translate(worldWidth*cellSize/2-(player.x + player.cameraX)*cellSize, worldHeight*cellSize/2-(player.y+player.cameraY)*cellSize);
-		}
-		player.display()
-		pop();
+		draw();
 		return;
 	}
 

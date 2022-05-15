@@ -58,6 +58,7 @@ class Player {
         }
 
         this.steps++;
+        hasMoved = true;
     }
 
     display() {
