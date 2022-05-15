@@ -38,7 +38,7 @@ class Room {
                 this.grid[(i+1)*2][2] = symbols.envelope + i;
             } else {
                 this.items.push(randomisedItems[i]);
-                this.grid[(i+1)*2][2] = symbols.item + i;
+                this.grid[(i+1)*2][2] = randomisedItems[i][0] + i;
             }
         }
 
@@ -47,9 +47,12 @@ class Room {
 
     open(itemNumber) {
 
-        inventory.push(this.items[itemNumber]);
-        items.splice(items.indexOf(this.items[itemNumber]), 1);
-        this.grid[(itemNumber+1)*2][2] = "";
+        if (player.stamina >= 50) {
+            inventory[this.items[itemNumber].slice(3)] += 3;
+            player.stamina -= 50;
+        }
+        //items.splice(items.indexOf(this.items[itemNumber]), 1);
+        //this.grid[(itemNumber+1)*2][2] = "";
     }
 
     display() {
@@ -81,7 +84,7 @@ class Room {
 
                 let number = this.grid[i][j];
 
-                if (number == undefined || number[0] == symbols.item || number == symbols.door || number[0] == symbols.envelope || number[0] == symbols.openedLetter) {
+                if (number == undefined || number[0] == symbols.pickaxe[0] || number == symbols.door || number[0] == symbols.envelope || number[0] == symbols.openedLetter) {
                     fill(palette.water);
                 } else if (number == symbols.wall) {
                     fill(palette.wall);
@@ -94,7 +97,7 @@ class Room {
 
                 if (number == undefined) {
                     continue
-                } else if (number[0] == symbols.item || number == symbols.door || number[0] == symbols.envelope || number[0] == symbols.openedLetter) {
+                } else if (number[0] == symbols.pickaxe[0] || number == symbols.door || number[0] == symbols.envelope || number[0] == symbols.openedLetter) {
                     fill(palette.white);
                 } else if (number == symbols.wall) {
                     fill(palette.black);

@@ -26,12 +26,14 @@ const symbols = {
 	openedLetter: "≋",
 	door: "⛩",
 	item: "★",
-	pickaxe: "⛏"
+	pickaxe: "⛏3 pickaxe"
 };
 
 //let items = ["jump", "pickaxe", "a bomb", "a tunneling bomb", "100 " + symbols.heart, "invicibility"];
-let items = [];
-let inventory = [];
+let items = [symbols.pickaxe];
+let inventory = {
+	pickaxe: 0,
+}
 
 let sweep;
 let player;
@@ -137,20 +139,27 @@ function draw() {
 		player.stamina = 0;
 	}
 
-	let staminaString = "";
+	let staminaString = player.stamina + " " + symbols.heart;
+	if (player.stamina > housePrice) staminaString += " = " + int(player.stamina/housePrice) + " " + symbols.house;
 
-	for (let i = 0; i < player.stamina; i++) {
-		staminaString += symbols.heart;
+	let inventoryKeys = Object.keys(inventory);
+
+	for (let i = 0; i < inventoryKeys.length; i++) {
+		if (inventory[inventoryKeys[i]] > 0) staminaString += "     " + inventory[inventoryKeys[0]] + " " + symbols[inventoryKeys[0]][0];
 	}
 
-	if (player.stamina >= housePrice) {
+	// for (let i = 0; i < player.stamina; i++) {
+	// 	staminaString += symbols.heart;
+	// }
 
-		staminaString += "\n= ";
+	// if (player.stamina >= housePrice) {
 
-		for (let i = housePrice-1; i < player.stamina; i += housePrice) {
-			staminaString += symbols.house;
-		}
-	}
+	// 	staminaString += "\n= ";
+
+	// 	for (let i = housePrice-1; i < player.stamina; i += housePrice) {
+	// 		staminaString += symbols.house;
+	// 	}
+	// }
 
 	text(staminaString, 0, 30);
 
@@ -160,12 +169,12 @@ function draw() {
 		hintText = "wasd or arrow keys to walk";
 	} else if (displayJumpTooltip) {
 		hintText = "press spacebar to jump";
-	} else if (isInRoom && rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.item + "0") {
-		hintText = "press b to buy " + rooms[roomNumber].items[0] + " for 50 " + symbols.heart;
-	} else if (isInRoom && rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.item + "1") {
-		hintText = "press b to buy " + rooms[roomNumber].items[1] + " for 50 " + symbols.heart;
-	} else if (isInRoom && rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.item + "2") {
-		hintText = "press b to buy " + rooms[roomNumber].items[2] + " for 50 " + symbols.heart;
+	} else if (isInRoom && rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.pickaxe[0] + "0") {
+		hintText = "press b to buy " + rooms[roomNumber].items[0].slice(1) + " for 50 " + symbols.heart;
+	} else if (isInRoom && rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.pickaxe[0] + "1") {
+		hintText = "press b to buy " + rooms[roomNumber].items[1].slice(1) + " for 50 " + symbols.heart;
+	} else if (isInRoom && rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.pickaxe[0] + "2") {
+		hintText = "press b to buy " + rooms[roomNumber].items[2].slice(1) + " for 50 " + symbols.heart;
 	} else if (isInRoom) {
 		if (rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.envelope + "0" || rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.openedLetter + "0") {
 			if (rooms[roomNumber].items[0].opened) {
@@ -340,11 +349,11 @@ function keyReleased() {
 		}
 	} else if (isInRoom &&  keyCode == 66) { // b
 
-		if (isInRoom && rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.item + "0") {
+		if (isInRoom && rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.pickaxe[0] + "0") {
 			rooms[roomNumber].open(0);
-		} else if (isInRoom && rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.item + "1") {
+		} else if (isInRoom && rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.pickaxe[0] + "1") {
 			rooms[roomNumber].open(1);
-		} else if (isInRoom && rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.item + "2") {
+		} else if (isInRoom && rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.pickaxe[0] + "2") {
 			rooms[roomNumber].open(2);
 		}
 

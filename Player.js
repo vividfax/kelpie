@@ -30,7 +30,13 @@ class Player {
 
     move(x, y) {
 
-        if (sweep.grid[this.x+x][this.y+y] == symbols.wall) return;
+        if (sweep.grid[this.x+x][this.y+y] == symbols.wall) {
+            if (inventory.pickaxe > 0) {
+                inventory.pickaxe--;
+            } else {
+                return;
+            }
+        }
         if (isInRoom && rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1+x][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1+y] == symbols.wall) return;
 
         this.x += x;

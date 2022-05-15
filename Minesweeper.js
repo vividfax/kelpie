@@ -85,7 +85,7 @@ class Minesweeper {
         for (let i = 0; i < this.w; i++) {
             for (let j = 0; j < this.h; j++) {
 
-                if (int(random(300)) == 1) {
+                if (int(random(30)) == 1) {
 
                     this.mineGrid[i][j] = symbols.door;
                     rooms.push(new Room(i, j));
@@ -212,6 +212,8 @@ class Minesweeper {
                 player.stamina += 2;
             } else if (this.grid[x][y] == "" || this.grid[x][y] == symbols.emptyHeart || this.grid[x][y] == symbols.river || this.grid[x][y] == symbols.house) {
                 //
+            } else if (this.grid[x][y] == symbols.wall) {
+                this.grid[x][y] = symbols.river;
             } else {
                 player.stamina -= this.grid[x][y];
                 this.grid[x][y] = symbols.river;
