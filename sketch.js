@@ -287,7 +287,6 @@ function keyPressed() {
 function keyReleased() {
 
 	if (dead) {
-		isInRoom = false;
 		reset();
 		return;
 	}
@@ -406,5 +405,7 @@ function reset() {
 	sweep.clearFog(player.x, player.y);
 	player.cameraX = 0;
 	player.cameraY = 0;
+	isInRoom = false;
+	inventory.pickaxe = 0;
 	draw();
 }

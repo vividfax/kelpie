@@ -6,7 +6,7 @@ class Room {
         this.y = y;
 
         this.w = 9;
-        this.h = 7;
+        this.h = 6;
 
         this.items = [];
         this.grid = [...Array(this.w)].map(e => Array(this.h));
@@ -42,7 +42,7 @@ class Room {
             }
         }
 
-        this.grid[4][5] = symbols.door;
+        this.grid[4][4] = symbols.door;
     }
 
     open(itemNumber) {
