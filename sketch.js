@@ -242,7 +242,7 @@ function display() {
 
 	push();
 
-	if (sweep.grid[player.x][player.y] == symbols.house && hasBuiltHouse) {
+	if (sweep.grid[player.x][player.y] == symbols.house && hasBuiltHouse && !isInRoom) {
 		mapScale = 0.5;
 		scale(mapScale);
 		translate(worldWidth*cellSize/2-(player.x)*cellSize, worldHeight*cellSize/2-(player.y)*cellSize);
