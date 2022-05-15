@@ -31,6 +31,7 @@ class Player {
     move(x, y) {
 
         if (sweep.grid[this.x+x][this.y+y] == symbols.wall) return;
+        if (isInRoom && rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1+x][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1+y] == symbols.wall) return;
 
         this.x += x;
         this.y += y;
@@ -59,6 +60,30 @@ class Player {
 
         this.steps++;
         hasMoved = true;
+
+        if (sweep.grid[this.x][this.y] == symbols.door && !isInRoom) {
+
+            for (let i = 0; i < rooms.length; i++) {
+                if (rooms[i].x == player.x && rooms[i].y == player.y) {
+                    roomNumber = i;
+                    break;
+                }
+            }
+
+            isInRoom = true;
+            playerXCache = this.x;
+            playerYCache = this.y;
+            this.x = worldWidth/2;
+            this.y = worldHeight/2+2;
+            this.cameraX = 0;
+            this.cameraY = 0;
+            draw();
+        } else if (isInRoom && rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-this.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-this.y+int(rooms[roomNumber].h/2))-1] == symbols.door) {
+            isInRoom = false;
+            this.x = playerXCache;
+            this.y = playerYCache;
+            draw();
+        }
     }
 
     display() {
@@ -83,9 +108,11 @@ class Player {
             push();
             translate(width/2 - this.gridWidth/2*cellSize, height/2 - this.gridHeight/2*cellSize);
 
-            if (player.stamina <= 0) {
+            if (isInRoom) {
+                fill(palette.water);
+            } else if (player.stamina <= 0) {
                 noFill();
-            } else if (sweep.grid[this.x][this.y] == "" || sweep.grid[this.x][this.y] == symbols.house || sweep.grid[this.x][this.y] == symbols.envelope || sweep.grid[this.x][this.y] == symbols.openedLetter) {
+            } else if (sweep.grid[this.x][this.y] == "" || sweep.grid[this.x][this.y] == symbols.house || sweep.grid[this.x][this.y] == symbols.envelope || sweep.grid[this.x][this.y] == symbols.openedLetter || sweep.grid[this.x][this.y] == symbols.door) {
                 fill(palette.water);
             } else if (sweep.grid[this.x][this.y] == symbols.river || sweep.grid[this.x][this.y] == symbols.emptyHeart) {
                 fill(palette.river);

@@ -11,11 +11,16 @@ class Chest {
 
     open() {
 
-        if (!this.opened && player.stamina >= this.price) {
+        if (!isInRoom && !this.opened && player.stamina >= this.price) {
             this.opened = true;
             player.stamina -= this.price;
             sweep.mineGrid[this.x][this.y] = symbols.openedLetter;
             sweep.grid[this.x][this.y] = symbols.openedLetter;
+        } else if (isInRoom && !this.opened && player.stamina >= this.price) {
+            console.log(this.x, this.y);
+            this.opened = true;
+            player.stamina -= this.price;
+			rooms[roomNumber].grid[this.x][this.y] = symbols.openedLetter + int(this.x/2-1);
         }
     }
 

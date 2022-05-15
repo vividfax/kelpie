@@ -14,6 +14,7 @@ class Minesweeper {
         this.walls = walls.cells;
         this.mineGrid = this.createMines();
         this.placeChests();
+        this.placeRooms();
         this.grid = JSON.parse(JSON.stringify(this.mineGrid));
         this.grid = this.getClues(this.grid);
         this.visibility = this.createFog();
@@ -74,6 +75,20 @@ class Minesweeper {
 
                     this.mineGrid[i][j] = symbols.envelope;
                     chests.push(new Chest(i, j));
+                }
+            }
+        }
+    }
+
+    placeRooms() {
+
+        for (let i = 0; i < this.w; i++) {
+            for (let j = 0; j < this.h; j++) {
+
+                if (int(random(30)) == 1) {
+
+                    this.mineGrid[i][j] = symbols.door;
+                    rooms.push(new Room(i, j));
                 }
             }
         }
@@ -178,7 +193,7 @@ class Minesweeper {
                 if (!this.visibility[targetX][targetY]) {
                     this.visibility[targetX][targetY] = true;
 
-                    if (this.grid[targetX][targetY] == "" || this.grid[targetX][targetY] == symbols.river || this.grid[targetX][targetY] == symbols.wall || this.grid[targetX][targetY] == symbols.envelope || this.grid[targetX][targetY] == symbols.openedLetter) {
+                    if (this.grid[targetX][targetY] == "" || this.grid[targetX][targetY] == symbols.river || this.grid[targetX][targetY] == symbols.wall || this.grid[targetX][targetY] == symbols.envelope || this.grid[targetX][targetY] == symbols.openedLetter || this.grid[targetX][targetY] == symbols.door) {
                         this.clearNeighbours(targetX, targetY);
                     }
                 }
@@ -188,7 +203,7 @@ class Minesweeper {
 
     eatCell(x, y) {
 
-        if (this.grid[x][y] == symbols.envelope || this.grid[x][y] == symbols.openedLetter) {
+        if (this.grid[x][y] == symbols.envelope || this.grid[x][y] == symbols.openedLetter || this.grid[x][y] == symbols.door) {
 
         } else if (player.stamina > 0) {
             if (this.grid[x][y][0] == symbols.heart) {
@@ -202,13 +217,6 @@ class Minesweeper {
                 this.grid[x][y] = symbols.river;
             }
         }
-        // else {
-        //     if (this.grid[x][y][0] == symbols.heart) {
-        //         this.grid[x][y] = symbols.emptyHeart;
-        //         score++;
-        //         player.stamina = 3;
-        //     }
-        // }
     }
 
     placeHouse(x, y) {
@@ -270,6 +278,8 @@ class Minesweeper {
                         fill(palette.wall)
                     } else if (number == symbols.envelope || number == symbols.openedLetter) {
                         fill(palette.water)
+                    } else if (number == symbols.door) {
+                        fill(palette.water)
                     }
 
                     noStroke();
@@ -298,6 +308,8 @@ class Minesweeper {
                     } else if (number == symbols.wall) {
                         fill(palette.black);
                     } else if (number == symbols.envelope || number == symbols.openedLetter || number == symbols.emptyHeart) {
+                        fill(palette.white)
+                    } else if (number == symbols.door) {
                         fill(palette.white)
                     }
 
