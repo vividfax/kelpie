@@ -170,11 +170,14 @@ function draw() {
 	} else if (displayJumpTooltip) {
 		hintText = "press spacebar to jump";
 	} else if (isInRoom && rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.pickaxe[0] + "0") {
-		hintText = "press b to buy " + rooms[roomNumber].items[0].slice(1) + " for 50 " + symbols.heart;
+		if (player.stamina >= 50) hintText = "press b to buy ";
+		hintText += rooms[roomNumber].items[0].slice(1) + " for 50 " + symbols.heart;
 	} else if (isInRoom && rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.pickaxe[0] + "1") {
-		hintText = "press b to buy " + rooms[roomNumber].items[1].slice(1) + " for 50 " + symbols.heart;
+		if (player.stamina >= 50) hintText = "press b to buy ";
+		hintText += rooms[roomNumber].items[1].slice(1) + " for 50 " + symbols.heart;
 	} else if (isInRoom && rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.pickaxe[0] + "2") {
-		hintText = "press b to buy " + rooms[roomNumber].items[2].slice(1) + " for 50 " + symbols.heart;
+		if (player.stamina >= 50) hintText = "press b to buy ";
+		hintText += rooms[roomNumber].items[2].slice(1) + " for 50 " + symbols.heart;
 	} else if (isInRoom) {
 		if (rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.envelope + "0" || rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.openedLetter + "0") {
 			if (rooms[roomNumber].items[0].opened) {
@@ -284,6 +287,7 @@ function keyPressed() {
 function keyReleased() {
 
 	if (dead) {
+		isInRoom = false;
 		reset();
 		return;
 	}

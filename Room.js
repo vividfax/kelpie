@@ -107,7 +107,13 @@ class Room {
                 textFont("Fira Code");
                 textSize(cellSize * .7);
                 text(number.toString()[0], x + cellSize / 2, y + cellSize / 2 + 2);
+
+
             }
+        }
+
+        if (player.stamina <= 0) {
+            background(palette.ghosting);
         }
 
         pop();
