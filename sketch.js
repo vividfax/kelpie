@@ -136,12 +136,10 @@ function draw() {
 
 	let hintText = "";
 
-	console.log(frameCount);
-
 	if (frameCount == 2) {
 		hintText = "wasd or arrow keys to walk";
 	} else if (dead) {
-		hintText = "walk to respawn";
+		hintText = "press any key to respawn";
 	} else if (player.stamina >= housePrice && sweep.grid[player.x][player.y] == "") {
 		hintText = "press h to build a house for " + housePrice + " " + symbols.heart;
 	} else if (houses.length > 1 && sweep.grid[player.x][player.y] == symbols.house) {
@@ -151,9 +149,9 @@ function draw() {
 		for (let i = 0; i < chests.length; i++) {
 			if (chests[i].x == player.x && chests[i].y == player.y) {
 
-				hintText = chests[i].words;
-
 				if (chests[i].opened) {
+					textStyle(ITALIC);
+					hintText = chests[i].words;
 				} else if (player.stamina < chests[i].price) {
 					hintText = "you need " + chests[i].price + " " + symbols.heart + " to open this";
 				} else {
@@ -203,8 +201,13 @@ function display() {
 
 	pop();
 }
-
+f
 function keyPressed() {
+
+	if (dead) {
+		reset();
+		return;
+	}
 
 	if (keyCode == 72 && player.stamina >= housePrice && sweep.grid[player.x][player.y] == "") { // h
 
@@ -246,7 +249,12 @@ function keyPressed() {
 			}
 		}
 
+	} else if ((keyCode == UP_ARROW || keyCode == 87) && (keyCode == LEFT_ARROW || keyCode == 65)) {
+		if (frameCount % 2 == 1) {
+			player.move(-1, -1);
+		}
 	} else if (keyCode == UP_ARROW || keyCode == 87) {
+		console.log("not");
 		player.move(0, -1);
 	} else if (keyCode == DOWN_ARROW || keyCode == 83) {
 		player.move(0, 1);
@@ -261,10 +269,6 @@ function keyPressed() {
 
 	sweep.eatCell(player.x, player.y);
 	sweep.clearFog(player.x, player.y);
-
-	if (dead) {
-		reset();
-	}
 
 	if (player.stamina <= 0) {
 		dead = true;

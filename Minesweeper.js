@@ -425,8 +425,13 @@ class Minesweeper {
                     noFill();
                 }
 
-                textSize(cellSize * .7);
-                text(number, _x + cellSize / 2, _y + cellSize / 2 + 2);
+                if (number[0] == symbols.heart) {
+                    textSize(cellSize * .6);
+                } else {
+                    textSize(cellSize * .7);
+                }
+
+                text(number[0], _x + cellSize / 2, _y + cellSize / 2 + 2);
                 fill(palette.ghosting);
                 rect(_x, _y, cellSize, cellSize);
             }
