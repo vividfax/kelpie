@@ -47,6 +47,8 @@ let hasBuiltHouse;
 let housePrice = 20;
 let houses = [];
 
+let lastMoveWasDiagonal = false;
+
 function preload(){
 
 	kelpieWords = loadStrings("kelpie-words.txt");
@@ -201,8 +203,13 @@ function display() {
 
 	pop();
 }
-f
-function keyPressed() {
+
+function keyReleased() {
+
+	if (lastMoveWasDiagonal) {
+		lastMoveWasDiagonal = false;
+		return;
+	}
 
 	if (dead) {
 		reset();
@@ -249,12 +256,19 @@ function keyPressed() {
 			}
 		}
 
-	} else if ((keyCode == UP_ARROW || keyCode == 87) && (keyCode == LEFT_ARROW || keyCode == 65)) {
-		if (frameCount % 2 == 1) {
-			player.move(-1, -1);
-		}
+	} else if ((keyCode == 65 && keyIsDown(87)) || (keyCode == 87 && keyIsDown(65)) || (keyCode == UP_ARROW && keyIsDown(LEFT_ARROW)) || (keyCode == LEFT_ARROW && keyIsDown(UP_ARROW))) {
+		player.move(-1, -1);
+		lastMoveWasDiagonal = true;
+	} else if ((keyCode == 65 && keyIsDown(83)) || (keyCode == 83 && keyIsDown(65)) || (keyCode == DOWN_ARROW && keyIsDown(LEFT_ARROW)) || (keyCode == LEFT_ARROW && keyIsDown(DOWN_ARROW))) {
+		player.move(-1, 1);
+		lastMoveWasDiagonal = true;
+	} else if ((keyCode == 68 && keyIsDown(87)) || (keyCode == 87 && keyIsDown(68)) || (keyCode == UP_ARROW && keyIsDown(RIGHT_ARROW)) || (keyCode == RIGHT_ARROW && keyIsDown(UP_ARROW))) {
+		player.move(1, -1);
+		lastMoveWasDiagonal = true;
+	} else if ((keyCode == 68 && keyIsDown(83)) || (keyCode == 83 && keyIsDown(68)) || (keyCode == DOWN_ARROW && keyIsDown(RIGHT_ARROW)) || (keyCode == RIGHT_ARROW && keyIsDown(DOWN_ARROW))) {
+		player.move(1, 1);
+		lastMoveWasDiagonal = true;
 	} else if (keyCode == UP_ARROW || keyCode == 87) {
-		console.log("not");
 		player.move(0, -1);
 	} else if (keyCode == DOWN_ARROW || keyCode == 83) {
 		player.move(0, 1);
@@ -262,8 +276,7 @@ function keyPressed() {
 		player.move(-1, 0);
 	} else if (keyCode == RIGHT_ARROW || keyCode == 68) {
 		player.move(1, 0);
-	}
-	else {
+	} else {
 		return;
 	}
 
