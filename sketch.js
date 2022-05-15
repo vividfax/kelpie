@@ -25,7 +25,8 @@ const symbols = {
 	envelope: "✉",
 	openedLetter: "≋",
 	door: "⛩",
-	item: "★"
+	item: "★",
+	pickaxe: "⛏"
 };
 
 //let items = ["jump", "pickaxe", "a bomb", "a tunneling bomb", "100 " + symbols.heart, "invicibility"];
@@ -316,10 +317,10 @@ function keyReleased() {
 			if (houseIndex >= houses.length) {
 				houseIndex = 0;
 			}
+			player.x = houses[houseIndex][0];
+			player.y = houses[houseIndex][1];
 		}
 
-		player.x = houses[houseIndex][0];
-		player.y = houses[houseIndex][1];
 
 	} else if (keyCode == 79 && sweep.grid[player.x][player.y] == symbols.envelope) { // o
 
