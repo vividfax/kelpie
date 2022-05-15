@@ -204,15 +204,57 @@ function display() {
 	pop();
 }
 
-function keyReleased() {
+function keyPressed() {
 
-	if (lastMoveWasDiagonal) {
-		lastMoveWasDiagonal = false;
-		return;
+	if (dead) return;
+
+	if (keyCode == 32) {
+		player.wiggle = -cellSize/9;
+		push();
+		if (sweep.grid[player.x][player.y] == symbols.house && hasBuiltHouse) {
+			mapScale = 0.5;
+			scale(mapScale);
+			translate(worldWidth*cellSize/2-(player.x)*cellSize, worldHeight*cellSize/2-(player.y)*cellSize);
+			translate(width/2, height/2);
+
+		}
+		else {
+			mapScale = 1;
+			translate(worldWidth*cellSize/2-(player.x + player.cameraX)*cellSize, worldHeight*cellSize/2-(player.y+player.cameraY)*cellSize);
+		}
+		player.display()
+		pop();
 	}
+}
+
+function keyReleased() {
 
 	if (dead) {
 		reset();
+		return;
+	}
+
+	if (keyCode == 32) {
+		player.wiggle = 0;
+		push();
+		if (sweep.grid[player.x][player.y] == symbols.house && hasBuiltHouse) {
+			mapScale = 0.5;
+			scale(mapScale);
+			translate(worldWidth*cellSize/2-(player.x)*cellSize, worldHeight*cellSize/2-(player.y)*cellSize);
+			translate(width/2, height/2);
+
+		}
+		else {
+			mapScale = 1;
+			translate(worldWidth*cellSize/2-(player.x + player.cameraX)*cellSize, worldHeight*cellSize/2-(player.y+player.cameraY)*cellSize);
+		}
+		player.display()
+		pop();
+		return;
+	}
+
+	if (lastMoveWasDiagonal) {
+		lastMoveWasDiagonal = false;
 		return;
 	}
 

@@ -15,6 +15,8 @@ class Player {
 
         this.cameraX = 0;
         this.cameraY = 0;
+
+        this.wiggle = 0;
     }
 
     placePlayer(sweep) {
@@ -93,7 +95,7 @@ class Player {
 
             fill(palette.white);
             textSize(cellSize);
-            text(this.symbol, this.x*cellSize + cellSize / 2 - 16/30*cellSize, this.y*cellSize + cellSize / 2 + 7/30*cellSize);
+            text(this.symbol, this.x*cellSize + cellSize / 2 - 16/30*cellSize, this.y*cellSize + cellSize / 2 + 7/30*cellSize + this.wiggle);
 
             pop();
         }
