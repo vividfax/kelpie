@@ -85,7 +85,7 @@ class Minesweeper {
         for (let i = 0; i < this.w; i++) {
             for (let j = 0; j < this.h; j++) {
 
-                if (int(random(30)) == 1) {
+                if (int(random(300)) == 1) {
 
                     this.mineGrid[i][j] = symbols.door;
                     rooms.push(new Room(i, j));
