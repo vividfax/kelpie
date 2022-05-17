@@ -42,8 +42,9 @@ let dead;
 let chests = [];
 let rooms = [];
 
-let kelpieWords = [];
-let commonWords = [];
+let verbs = [];
+let adjectives = [];
+let nouns = [];
 
 let worldWidth = 1000;
 let worldHeight = 1000;
@@ -69,10 +70,12 @@ let playerYCache;
 
 function preload(){
 
-	kelpieWords = loadStrings("kelpie-words.txt");
-	kelpieWords.pop();
-	commonWords = loadStrings("common.txt");
-	commonWords.pop();
+	verbs = loadStrings("words/verbs.txt");
+	verbs.pop();
+	adjectives = loadStrings("words/adjectives.txt");
+	adjectives.pop();
+	nouns = loadStrings("words/nouns.txt");
+	nouns.pop();
 }
 
 function setup() {
