@@ -26,277 +26,153 @@ const symbols = {
 	openedLetter: "≋",
 	door: "⛩",
 	item: "★",
-	pickaxe: "⛏3 pickaxe"
+	pickaxe: "⛏",
+	emptyCell: "",
+	building_materials: "⚒"
 };
 
-//let items = ["jump", "pickaxe", "a bomb", "a tunneling bomb", "100 " + symbols.heart, "invicibility"];
-let items = [symbols.pickaxe];
-let inventory = {
-	pickaxe: 0,
-}
-
-let sweep;
-let player;
-let walls;
-let dead;
-let chests = [];
-let rooms = [];
+const items = ["pickaxe3", "building materials1"];
 
 let verbs = [];
 let adjectives = [];
 let nouns = [];
 
-let worldWidth = 1000;
-let worldHeight = 1000;
-
-let cellSize = 45;
-let gridWidth = 10;
-let gridHeight = 10;
-let mapScale = 1;
-
-let hasBuiltHouse;
-
-let housePrice = 20;
+let grid;
+let player;
 let houses = [];
 
-let lastMoveWasDiagonal = false;
-let displayJumpTooltip = false;
-let hasMoved = false;
-let isInRoom = false;
-let roomNumber = 0;
+let worldWidth = 1000;
+let worldHeight = 1000;
+let cellSize = 45;
 
-let playerXCache;
-let playerYCache;
+let lastMoveWasDiagonal = false;
+let hasMoved = false;
+let displayJumpTooltip = false;
 
 function preload(){
 
-	verbs = loadStrings("words/verbs.txt");
+	verbs = loadStrings("txt/verbs.txt");
 	verbs.pop();
-	adjectives = loadStrings("words/adjectives.txt");
+	adjectives = loadStrings("txt/adjectives.txt");
 	adjectives.pop();
-	nouns = loadStrings("words/nouns.txt");
+	nouns = loadStrings("txt/nouns.txt");
 	nouns.pop();
 }
 
 function setup() {
 
 	createCanvas(windowWidth, windowHeight);
+
 	angleMode(DEGREES);
+	textAlign(CENTER, CENTER);
+	textFont("Fira Code");
+	noStroke();
 
-	gridWidth = int(width/cellSize);
-	gridHeight = int(height/cellSize);
+	grid = new Grid(worldWidth, worldHeight);
+	player = new Player();
 
-	if (gridHeight > worldHeight/2) gridHeight = worldHeight/2;
-	if (gridWidth > worldWidth/2) gridWidth = worldWidth/2;
-
-	walls = new Walls(worldWidth, worldHeight);
-	sweep = new Minesweeper(worldWidth, worldHeight, gridWidth, gridHeight, walls);
-	player = new Player(sweep);
-
-	houses.push([player.x, player.y]);
-
-	for (let i = 0; i < houses.length; i++) {
-		sweep.placeHouse(houses[i][0], houses[i][1]);
-	}
-
-	rooms.push(new Room(player.x+1, player.y+1))
-
-	draw();
-	sweep.clearFog(player.x, player.y);
-
-	noLoop();
+    noLoop();
+    draw();
 
 	document.onfocus = function() {focus()};
 }
 
-function focus() {
-
-	if (hasMoved) {
-		displayJumpTooltip = true;
-		draw();
-	}
-}
-
 function draw() {
 
-	background(palette.black);
-
-	display();
+    background(palette.fog);
 
 	push();
+	if (!player.isInRoom) translate(-player.cameraX * cellSize, -player.cameraY * cellSize);
+
+    if (!player.isInRoom) {
+        grid.display();
+        if (player.dead) background(palette.ghosting);
+    } else {
+        grid.grid[player.x][player.y].displayRoom();
+    }
+
+    player.display();
+
+	pop();
+
+    displayUI();
+
+}
+
+function displayUI() {
+
+    push();
 	stroke(palette.black);
 	strokeWeight(80);
 	noFill();
 	rect(0,20, width, height-40, 50);
 	pop();
 
-	push();
-	translate(width/2, 0);
-
 	fill(palette.white);
-	textAlign(CENTER, CENTER);
 	textSize(20);
-	textFont("Fira Code");
 
-	if (player.stamina < 0) {
-		player.stamina = 0;
-	}
+	let topString = player.points + " " + symbols.heart;
 
-	let staminaString = player.stamina + " " + symbols.heart;
-	if (player.stamina > housePrice) staminaString += " = " + int(player.stamina/housePrice) + " " + symbols.house;
-
-	let inventoryKeys = Object.keys(inventory);
+	let inventoryKeys = Object.keys(player.inventory);
 
 	for (let i = 0; i < inventoryKeys.length; i++) {
-		if (inventory[inventoryKeys[i]] > 0) staminaString += "     " + inventory[inventoryKeys[0]] + " " + symbols[inventoryKeys[0]][0];
+		if (player.inventory[inventoryKeys[i]] > 0) topString += "     " + player.inventory[inventoryKeys[i]] + " " + symbols[inventoryKeys[i]];
 	}
 
-	// for (let i = 0; i < player.stamina; i++) {
-	// 	staminaString += symbols.heart;
-	// }
+    topString += "\n" + player.memory;
 
-	// if (player.stamina >= housePrice) {
+	text(topString, width/2, 30);
 
-	// 	staminaString += "\n= ";
-
-	// 	for (let i = housePrice-1; i < player.stamina; i += housePrice) {
-	// 		staminaString += symbols.house;
-	// 	}
-	// }
-
-	text(staminaString, 0, 30);
-
-	let hintText = "";
-
-	if (!hasMoved) {
-		hintText = "wasd or arrow keys to walk";
-	} else if (displayJumpTooltip) {
-		hintText = "press spacebar to jump";
-	} else if (isInRoom && rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.pickaxe[0] + "0") {
-		if (player.stamina >= 50) hintText = "press b to buy ";
-		hintText += rooms[roomNumber].items[0].slice(1) + " for 50 " + symbols.heart;
-	} else if (isInRoom && rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.pickaxe[0] + "1") {
-		if (player.stamina >= 50) hintText = "press b to buy ";
-		hintText += rooms[roomNumber].items[1].slice(1) + " for 50 " + symbols.heart;
-	} else if (isInRoom && rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.pickaxe[0] + "2") {
-		if (player.stamina >= 50) hintText = "press b to buy ";
-		hintText += rooms[roomNumber].items[2].slice(1) + " for 50 " + symbols.heart;
-	} else if (isInRoom) {
-		if (rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.envelope + "0" || rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.openedLetter + "0") {
-			if (rooms[roomNumber].items[0].opened) {
-				textStyle(ITALIC);
-				hintText = rooms[roomNumber].items[0].words;
-			} else if (player.stamina < rooms[roomNumber].items[0].price) {
-				hintText = "you need " + rooms[roomNumber].items[0].price + " " + symbols.heart + " to open this";
-			} else {
-				hintText = "press o to open for " + rooms[roomNumber].items[0].price+ " " + symbols.heart;
-			}
-		} else if (rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.envelope + "1" || rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.openedLetter + "1") {
-			if (rooms[roomNumber].items[1].opened) {
-				textStyle(ITALIC);
-				hintText = rooms[roomNumber].items[1].words;
-			} else if (player.stamina < rooms[roomNumber].items[1].price) {
-				hintText = "you need " + rooms[roomNumber].items[1].price + " " + symbols.heart + " to open this";
-			} else {
-				hintText = "press o to open for " + rooms[roomNumber].items[1].price+ " " + symbols.heart;
-			}
-		} else if (rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.envelope + "2" || rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.openedLetter + "2") {
-			if (rooms[roomNumber].items[2].opened) {
-				textStyle(ITALIC);
-				hintText = rooms[roomNumber].items[2].words;
-			} else if (player.stamina < rooms[roomNumber].items[2].price) {
-				hintText = "you need " + rooms[roomNumber].items[2].price + " " + symbols.heart + " to open this";
-			} else {
-				hintText = "press o to open for " + rooms[roomNumber].items[2].price+ " " + symbols.heart;
-			}
-		}
-	} else if (dead) {
-		hintText = "press any key to respawn";
-	} else if (player.stamina >= housePrice && sweep.grid[player.x][player.y] == "" && !isInRoom) {
-		hintText = "press h to build a house for " + housePrice + " " + symbols.heart;
-	} else if (houses.length > 1 && sweep.grid[player.x][player.y] == symbols.house) {
-		hintText = "press t to fast travel between houses";
-	} else if (sweep.grid[player.x][player.y] == symbols.envelope || sweep.grid[player.x][player.y] == symbols.openedLetter) {
-
-		for (let i = 0; i < chests.length; i++) {
-			if (chests[i].x == player.x && chests[i].y == player.y) {
-
-				if (chests[i].opened) {
-					textStyle(ITALIC);
-					hintText = chests[i].words;
-				} else if (player.stamina < chests[i].price) {
-					hintText = "you need " + chests[i].price + " " + symbols.heart + " to open this";
-				} else {
-					hintText = "press o to open for " + chests[i].price + " " + symbols.heart;
-				}
-				break;
-			}
-		}
-	}
-
-	text(hintText, 0, height - 30);
-
-	pop();
-
-	frameCount++;
+    displayToolip();
 }
 
-function display() {
+function displayToolip() {
 
-	push();
-	translate(-cellSize/2, -cellSize/2);
+	let tooltip = "";
 
-	if (sweep.grid[player.x][player.y] == symbols.house && hasBuiltHouse && !isInRoom) {
-		mapScale = 0.5;
-		scale(mapScale);
-		translate(worldWidth*cellSize/2-(player.x)*cellSize, worldHeight*cellSize/2-(player.y)*cellSize);
-		translate(width/2, height/2);
-	}
-	else {
-		mapScale = 1;
-		translate(worldWidth*cellSize/2-(player.x + player.cameraX)*cellSize, worldHeight*cellSize/2-(player.y+player.cameraY)*cellSize);
+    let currentCell = grid.grid[player.x][player.y];
+	let currentRoomCell = null;
+
+	if (currentCell instanceof Shop && currentCell.generatedRoom) {
+		currentRoomCell = currentCell.grid[player.roomX][player.roomY];
 	}
 
-	if (!isInRoom) {
-		sweep.display();
+    if (!hasMoved) tooltip = "wasd or arrow keys to walk";
+    else if (displayJumpTooltip) tooltip = "press spacebar to jump";
+    else if (currentCell instanceof Shop && !player.isInRoom) tooltip = "press e to enter";
+    else if (player.isInRoom && currentRoomCell.symbol == symbols.door) tooltip = "press e to exit";
+    else if (currentCell instanceof Shop && player.isInRoom && currentRoomCell) tooltip = currentRoomCell.getTooltip();
+    else if (currentCell instanceof Note) tooltip = currentCell.getTooltip();
+    else if (currentCell instanceof House && houses.length > 1) tooltip = "press t to fast travel";
+    else if (currentCell instanceof EmptyCell && currentCell.height == 0 && player.inventory.building_materials > 0) tooltip = "press h to build a house";
 
-		for (let i = 0; i < houses.length; i++) {
-			sweep.placeHouse(houses[i][0], houses[i][1]);
-		}
-
-		if (player.stamina <= 0) {
-			sweep.displaySurrounding(player.x, player.y);
-		}
-	} else {
-		rooms[roomNumber].display();
-	}
-
-	player.display();
-
-	pop();
+	text(tooltip, width/2, height - 30);
 }
 
 function keyPressed() {
 
 	displayJumpTooltip = false;
 
-	if (dead) return;
+	if (player.dead) return;
 
 	if (keyCode == 32) {
-		player.wiggle = -cellSize/9;
+		player.jumpOffset = -cellSize/9;
 		draw();
 	}
 }
 
 function keyReleased() {
 
-	if (dead) {
-		reset();
-		return;
-	}
+	if (!player) return;
+
+    if (player.dead) {
+        reset();
+        draw();
+        return;
+    }
 
 	if (keyCode == 32) { // spacebar
-		player.wiggle = 0;
+		player.jumpOffset = 0;
 		draw();
 		return;
 	}
@@ -306,65 +182,35 @@ function keyReleased() {
 		return;
 	}
 
-	if (keyCode == 72 && player.stamina >= housePrice && sweep.grid[player.x][player.y] == "") { // h
+    let currentCell = grid.grid[player.x][player.y];
+	let currentRoomCell = null;
 
-		player.stamina -= housePrice;
-		houses.push([player.x, player.y]);
+	if (currentCell instanceof Shop && currentCell.generatedRoom) {
+		currentRoomCell = currentCell.grid[player.roomX][player.roomY];
+	}
 
-		for (let i = 0; i < houses.length; i++) {
-			sweep.placeHouse(houses[i][0], houses[i][1]);
-		}
-
-		hasBuiltHouse = true;
-
-	} else if (keyCode == 84) { // t
-
-		let houseIndex = -1;
-
-		for (let i = 0; i < houses.length; i++) {
-			if (houses[i][0] == player.x && houses[i][1] == player.y) {
-				houseIndex = i;
-				break;
-			}
-		}
-
-		if (houseIndex != -1) {
-			houseIndex++;
-			if (houseIndex >= houses.length) {
-				houseIndex = 0;
-			}
-			player.x = houses[houseIndex][0];
-			player.y = houses[houseIndex][1];
-		}
-
-
-	} else if (keyCode == 79 && sweep.grid[player.x][player.y] == symbols.envelope) { // o
-
-		for (let i = 0; i < chests.length; i++) {
-			if (chests[i].x == player.x && chests[i].y == player.y) {
-				chests[i].open();
-			}
-		}
-	} else if (keyCode == 79 && isInRoom) { // 0
-
-		if (rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.envelope + "0") {
-			rooms[roomNumber].items[0].open();
-		} else if (rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.envelope + "1") {
-			rooms[roomNumber].items[1].open();
-		} else if (rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.envelope + "2") {
-			rooms[roomNumber].items[2].open();
-		}
-	} else if (isInRoom &&  keyCode == 66) { // b
-
-		if (isInRoom && rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.pickaxe[0] + "0") {
-			rooms[roomNumber].open(0);
-		} else if (isInRoom && rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.pickaxe[0] + "1") {
-			rooms[roomNumber].open(1);
-		} else if (isInRoom && rooms[roomNumber].grid[rooms[roomNumber].w-(worldWidth/2-player.x+int(rooms[roomNumber].w/2))-1][rooms[roomNumber].h-(worldHeight/2-player.y+int(rooms[roomNumber].h/2))-1] == symbols.pickaxe[0] + "2") {
-			rooms[roomNumber].open(2);
-		}
-
-	} else if ((keyCode == 65 && keyIsDown(87)) || (keyCode == 87 && keyIsDown(65)) || (keyCode == UP_ARROW && keyIsDown(LEFT_ARROW)) || (keyCode == LEFT_ARROW && keyIsDown(UP_ARROW))) {
+    if (keyCode == 79 && currentCell instanceof Note && !currentCell.opened) { // o
+        currentCell.open();
+    } else if (keyCode == 79 && player.isInRoom && currentRoomCell instanceof Note) { // o
+        currentRoomCell.open();
+    } else if (keyCode == 69 && currentCell instanceof Shop && !player.isInRoom) { // e
+        player.enterRoom();
+    } else if (keyCode == 66 && player.isInRoom && currentRoomCell instanceof Item) { // b
+		currentRoomCell.buy();
+	} else if (keyCode == 84 && !player.isInRoom && currentCell instanceof House && houses.length > 1) { // t
+		let nextHouseIndex = houses.indexOf(currentCell)+1;
+		if (nextHouseIndex >= houses.length) nextHouseIndex = 0;
+		let nextHouse = houses[nextHouseIndex];
+		player.x = nextHouse.x/cellSize;
+		player.y = nextHouse.y/cellSize;
+	} else if (keyCode == 72 && !player.isInRoom && currentCell instanceof EmptyCell && currentCell.height == 0 && player.inventory.building_materials > 0) { // h
+		let house = new House(player.x, player.y);
+		grid.grid[player.x][player.y] = house;
+		houses.push(house);
+		player.inventory.building_materials--;
+	}  else if (keyCode == 69 && player.isInRoom && currentRoomCell instanceof EmptyCell && currentRoomCell.symbol == symbols.door) { // e
+        player.exitRoom();
+    } else if ((keyCode == 65 && keyIsDown(87)) || (keyCode == 87 && keyIsDown(65)) || (keyCode == UP_ARROW && keyIsDown(LEFT_ARROW)) || (keyCode == LEFT_ARROW && keyIsDown(UP_ARROW))) {
 		player.move(-1, -1);
 		lastMoveWasDiagonal = true;
 	} else if ((keyCode == 65 && keyIsDown(83)) || (keyCode == 83 && keyIsDown(65)) || (keyCode == DOWN_ARROW && keyIsDown(LEFT_ARROW)) || (keyCode == LEFT_ARROW && keyIsDown(DOWN_ARROW))) {
@@ -388,28 +234,21 @@ function keyReleased() {
 		return;
 	}
 
-	if (!isInRoom) {
-		sweep.eatCell(player.x, player.y);
-		sweep.clearFog(player.x, player.y);
-	}
-
-	if (player.stamina <= 0) {
-		dead = true;
-	}
-
-	draw();
+    draw();
 }
 
 function reset() {
 
-	dead = false;
-	player.stamina = 5;
-	player.placePlayer(sweep);
-	sweep.reset();
-	sweep.clearFog(player.x, player.y);
-	player.cameraX = 0;
-	player.cameraY = 0;
-	isInRoom = false;
-	inventory.pickaxe = 0;
-	draw();
+    player.dead = false;
+    player.points = 5;
+    grid.reset();
+    player.reset();
+}
+
+function focus() {
+
+	if (hasMoved) {
+		displayJumpTooltip = true;
+		draw();
+	}
 }
