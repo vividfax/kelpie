@@ -256,7 +256,7 @@ class Grid {
 
                 let cell = this.grid[i][j];
 
-                if (int(random(30)) == 1 && (cell instanceof EmptyCell && cell.height == 0)) {
+                if (int(random(300)) == 1 && (cell instanceof EmptyCell && cell.height == 0)) {
 
                     let h = cell.height;
                     if (cell instanceof Rock) h = -1;
@@ -274,7 +274,7 @@ class Grid {
 
                 let cell = this.grid[i][j];
 
-                if (int(random(30)) == 1 && (cell instanceof Rock || (cell instanceof EmptyCell && cell.height == 0))) {
+                if ((int(random(30)) == 1 && cell instanceof Rock) || ((int(random(10)) == 1 && cell instanceof EmptyCell && cell.height == 0))) {
 
                     let h = cell.height;
                     if (cell instanceof Rock) h = -1;
@@ -315,11 +315,11 @@ class Grid {
 	    translate(-cellSize/2, -cellSize/2);
         translate(-player.x * cellSize + width/2, -player.y * cellSize + height/2);
 
-        let visibleGridWidth = int(width/cellSize);
-        let visibleGridHeight = int(height/cellSize);
+        let visibleGridWidth = int(width/cellSize/2);
+        let visibleGridHeight = int(height/cellSize/2);
 
-        for (let i = player.x+player.cameraX - visibleGridWidth/2; i < player.x+player.cameraX + visibleGridWidth/2+1; i++) {
-            for (let j = player.y+player.cameraY - visibleGridHeight/2; j < player.y+player.cameraY + visibleGridHeight/2+1; j++) {
+        for (let i = player.x+player.cameraX - visibleGridWidth; i < player.x+player.cameraX + visibleGridWidth+1; i++) {
+            for (let j = player.y+player.cameraY - visibleGridHeight; j < player.y+player.cameraY + visibleGridHeight+1; j++) {
 
                 if (!this.grid[i][j].fog) this.grid[i][j].display();
             }
