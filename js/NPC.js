@@ -36,9 +36,9 @@ class NPC {
         player.lastNPCtalkedTo = this;
 
         if (!this.asked) {
-            return `they say ` + this.question + `\n press r to reply`;
+            return this.question + ` they ask` + `\n press r to reply`;
         } else if (this.answered) {
-            return 'you say ' + player.memory + '\nand you gain 100 ' + symbols.heart;
+            return 'you say ' + player.memory + '\nand you gain 200 ' + symbols.heart;
         } else {
             return 'you say ' + player.memory + '\n' + 'and they stare at you blankly';
         }
