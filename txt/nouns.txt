@@ -94,7 +94,6 @@ nature
 neck
 necklace
 night
-nothing
 oil
 origin
 painter
@@ -128,8 +127,6 @@ shot
 sign
 sketch
 sleep
-someone
-something
 source
 spear
 speech

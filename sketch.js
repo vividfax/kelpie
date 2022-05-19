@@ -119,7 +119,8 @@ function displayUI() {
 		if (player.inventory[inventoryKeys[i]] > 0) topString += "     " + player.inventory[inventoryKeys[i]] + " " + symbols[inventoryKeys[i]];
 	}
 
-    topString += "\n" + player.memory;
+	if (player.memory != "nothing") topString += "\n" + player.memory;
+	else topString += "\n";
 
 	text(topString, width/2, 30);
 
@@ -145,6 +146,7 @@ function displayToolip() {
     else if (currentCell instanceof Note) tooltip = currentCell.getTooltip();
     else if (currentCell instanceof House && houses.length > 1) tooltip = "press t to fast travel";
     else if (currentCell instanceof EmptyCell && currentCell.height == 0 && player.inventory.building_materials > 0) tooltip = "press h to build a house";
+    else if (currentCell instanceof NPC) tooltip = currentCell.getTooltip(true);
 
 	text(tooltip, width/2, height - 30);
 }
@@ -197,6 +199,8 @@ function keyReleased() {
         player.enterRoom();
     } else if (keyCode == 66 && player.isInRoom && currentRoomCell instanceof Item) { // b
 		currentRoomCell.buy();
+	} else if (keyCode == 82 && !player.isInRoom && currentCell instanceof NPC) { // r
+		player.reply(currentCell);
 	} else if (keyCode == 84 && !player.isInRoom && currentCell instanceof House && houses.length > 1) { // t
 		let nextHouseIndex = houses.indexOf(currentCell)+1;
 		if (nextHouseIndex >= houses.length) nextHouseIndex = 0;

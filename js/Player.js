@@ -13,8 +13,9 @@ class Player {
         this.points = 5;
         this.dead = false;
         this.jumpOffset = 0;
-        this.memory = "";
+        this.memory = "nothing";
         this.isInRoom = false;
+        this.lastNPCtalkedTo = null;
 
         this.inventory = {
             pickaxe: 0,
@@ -71,6 +72,12 @@ class Player {
             this.eatCell(grid.grid[this.x][this.y].grid[this.roomX][this.roomY]);
         }
 
+        if (this.lastNPCtalkedTo != null) {
+
+            this.lastNPCtalkedTo.asked = false;
+            this.lastNPCtalkedTo.answered = false;
+        }
+
         hasMoved = true;
     }
 
@@ -106,6 +113,17 @@ class Player {
     exitRoom() {
 
         this.isInRoom = false;
+    }
+
+    reply(currentCell) {
+
+        currentCell.asked = true;
+
+        if (this.memory.includes(currentCell.subject)) {
+            player.points += 200;
+            currentCell.generateQuestion();
+            currentCell.answered = true;
+        }
     }
 
     display() {

@@ -40,6 +40,7 @@ class Grid {
 
         this.placeShops();
         this.placeNotes();
+        this.placeNPCs();
         this.clearAreaAroundPlayer(1);
         this.placeHouse();
     }
@@ -280,6 +281,21 @@ class Grid {
                     if (cell instanceof Rock) h = -1;
 
                     this.grid[i][j] = new Note(i, j, h);
+                }
+            }
+        }
+    }
+
+    placeNPCs() {
+
+        for (let i = 0; i < this.width; i++) {
+            for (let j = 0; j < this.height; j++) {
+
+                let cell = this.grid[i][j];
+
+                if (int(random(20)) == 1 && (cell instanceof EmptyCell && cell.height == 0)) {
+
+                    this.grid[i][j] = new NPC(i, j);
                 }
             }
         }
