@@ -31,6 +31,11 @@ class Player {
         this.cameraX = 0;
         this.cameraY = 0;
         grid.clearFog(this.x, this.y);
+
+        this.inventory = {
+            pickaxe: 0,
+            building_materials: 0
+        }
     }
 
     move(x, y) {

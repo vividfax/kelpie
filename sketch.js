@@ -88,9 +88,11 @@ function draw() {
 	if (grid.grid[player.x][player.y] instanceof House && houses.length > 1 && !player.isInRoom) {
 		scale(renderScale);
 		translate(width/2, height/2);
+		player.cameraX = 0;
+		player.cameraY = 0;
+	} else if (!player.isInRoom) {
+		translate(-player.cameraX * cellSize, -player.cameraY * cellSize);
 	}
-
-	if (!player.isInRoom) translate(-player.cameraX * cellSize, -player.cameraY * cellSize);
 
     if (!player.isInRoom) {
         grid.display();
