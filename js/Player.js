@@ -16,6 +16,7 @@ class Player {
         this.memory = "nothing";
         this.isInRoom = false;
         this.lastNPCtalkedTo = null;
+        this.steps = 0;
 
         this.inventory = {
             pickaxe: 0,
@@ -79,6 +80,7 @@ class Player {
         }
 
         hasMoved = true;
+        this.steps++;
     }
 
     eatCell(cell) {

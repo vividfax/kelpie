@@ -331,8 +331,8 @@ class Grid {
 	    translate(-cellSize/2, -cellSize/2);
         translate(-player.x * cellSize + width/2, -player.y * cellSize + height/2);
 
-        let visibleGridWidth = int(width/cellSize/2);
-        let visibleGridHeight = int(height/cellSize/2);
+        let visibleGridWidth = int(width/cellSize/2) * 1/renderScale;
+        let visibleGridHeight = int(height/cellSize/2) * 1/renderScale;
 
         for (let i = player.x+player.cameraX - visibleGridWidth; i < player.x+player.cameraX + visibleGridWidth+1; i++) {
             for (let j = player.y+player.cameraY - visibleGridHeight; j < player.y+player.cameraY + visibleGridHeight+1; j++) {

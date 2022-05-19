@@ -44,9 +44,11 @@ let houses = [];
 let worldWidth = 1000;
 let worldHeight = 1000;
 let cellSize = 45;
+let renderScale = 0.5;
 
 let lastMoveWasDiagonal = false;
 let hasMoved = false;
+let hasMovedDiagonally = false;
 let displayJumpTooltip = false;
 
 function preload(){
@@ -82,6 +84,12 @@ function draw() {
     background(palette.fog);
 
 	push();
+
+	if (grid.grid[player.x][player.y] instanceof House && houses.length > 1 && !player.isInRoom) {
+		scale(renderScale);
+		translate(width/2, height/2);
+	}
+
 	if (!player.isInRoom) translate(-player.cameraX * cellSize, -player.cameraY * cellSize);
 
     if (!player.isInRoom) {
@@ -147,6 +155,7 @@ function displayToolip() {
     else if (currentCell instanceof House && houses.length > 1) tooltip = "press t to fast travel";
     else if (currentCell instanceof EmptyCell && currentCell.height == 0 && player.inventory.building_materials > 0) tooltip = "press h to build a house";
     else if (currentCell instanceof NPC) tooltip = currentCell.getTooltip(true);
+    else if (!hasMovedDiagonally && player.steps > 15) tooltip = "btw you can move diagonally";
 
 	text(tooltip, width/2, height - 30);
 }
@@ -217,15 +226,19 @@ function keyReleased() {
     } else if ((keyCode == 65 && keyIsDown(87)) || (keyCode == 87 && keyIsDown(65)) || (keyCode == UP_ARROW && keyIsDown(LEFT_ARROW)) || (keyCode == LEFT_ARROW && keyIsDown(UP_ARROW))) {
 		player.move(-1, -1);
 		lastMoveWasDiagonal = true;
+		hasMovedDiagonally = true;
 	} else if ((keyCode == 65 && keyIsDown(83)) || (keyCode == 83 && keyIsDown(65)) || (keyCode == DOWN_ARROW && keyIsDown(LEFT_ARROW)) || (keyCode == LEFT_ARROW && keyIsDown(DOWN_ARROW))) {
 		player.move(-1, 1);
 		lastMoveWasDiagonal = true;
+		hasMovedDiagonally = true;
 	} else if ((keyCode == 68 && keyIsDown(87)) || (keyCode == 87 && keyIsDown(68)) || (keyCode == UP_ARROW && keyIsDown(RIGHT_ARROW)) || (keyCode == RIGHT_ARROW && keyIsDown(UP_ARROW))) {
 		player.move(1, -1);
 		lastMoveWasDiagonal = true;
+		hasMovedDiagonally = true;
 	} else if ((keyCode == 68 && keyIsDown(83)) || (keyCode == 83 && keyIsDown(68)) || (keyCode == DOWN_ARROW && keyIsDown(RIGHT_ARROW)) || (keyCode == RIGHT_ARROW && keyIsDown(DOWN_ARROW))) {
 		player.move(1, 1);
 		lastMoveWasDiagonal = true;
+		hasMovedDiagonally = true;
 	} else if (keyCode == UP_ARROW || keyCode == 87) {
 		player.move(0, -1);
 	} else if (keyCode == DOWN_ARROW || keyCode == 83) {

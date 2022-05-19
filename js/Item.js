@@ -16,7 +16,7 @@ class Item {
         if (player.points >= this.price) {
 
             player.inventory[this.type.replace(" ", "_")] += this.amount;
-            player.points -= this.price-1;
+            player.points -= this.price;
         }
     }
 

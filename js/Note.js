@@ -28,9 +28,6 @@ class Note {
             `"...$adjective, $adjective $noun..."`,
             `"...$adjective $noun $noun..."`,
             `"...$verb, $verb, $verb..."`,
-            `"...$adjective..."`,
-            `"...$noun..."`,
-            `"...$verb..."`,
             `"...$adjective and $adjective..."`,
             `"...$adjective $noun and $noun..."`
         ];
@@ -54,7 +51,7 @@ class Note {
 
         if (player.points >= this.price) {
             this.opened = true;
-            player.points -= this.price-1;
+            player.points -= this.price;
             player.memory = this.phrase;
         }
     }
