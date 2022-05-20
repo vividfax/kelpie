@@ -34,6 +34,9 @@ class Grid {
         this.placeRocks(rocksGrid);
 
         this.generateMines();
+        this.generateDeserts();
+        this.generateLakes();
+
         this.placeEmptyCells();
         this.clearAreaAroundPlayer(2);
         this.calculateHeight();
@@ -57,6 +60,8 @@ class Grid {
                 } else {
                     rocksGrid[i][j] = false;
                 }
+
+                if (i > worldWidth/2 - 20 && i < worldWidth/2 + 20 && j > worldHeight/2 - 20 && j < worldHeight/2 + 20) rocksGrid[i][j] = false;
             }
         }
 
@@ -154,6 +159,62 @@ class Grid {
                 }
 
                 place++;
+            }
+        }
+    }
+
+    generateDeserts() {
+
+        for (let i = 0; i < 200; i++) {
+
+            let randomX = int(random(worldWidth));
+            let randomY = int(random(worldHeight));
+            let randomWidth = int(random(10, 60));
+            let randomHeight = int(random(10, 60));
+
+            for (let j = randomX; j < randomX + randomWidth; j++) {
+                for (let k = randomY; k < randomY + randomHeight; k++) {
+
+                    let targetX = j;
+                    let targetY = k;
+
+                    if (targetX >= worldWidth) targetX -= worldWidth;
+                    if (targetY >= worldHeight) targetY -= worldHeight;
+
+                    if (targetX > worldWidth/2 - 30 && targetX < worldWidth/2 + 30 && targetY > worldHeight/2 - 30 && targetY < worldHeight/2 + 30) continue;
+
+                    let cell = this.grid[targetX][targetY];
+
+                    if (cell instanceof Mine && random(2) > 1) this.grid[targetX][targetY] = false;
+                }
+            }
+        }
+    }
+
+    generateLakes() {
+
+        for (let i = 0; i < 200; i++) {
+
+            let randomX = int(random(worldWidth));
+            let randomY = int(random(worldHeight));
+            let randomWidth = int(random(10, 30));
+            let randomHeight = int(random(10, 30));
+
+            for (let j = randomX; j < randomX + randomWidth; j++) {
+                for (let k = randomY; k < randomY + randomHeight; k++) {
+
+                    let targetX = j;
+                    let targetY = k;
+
+                    if (targetX >= worldWidth) targetX -= worldWidth;
+                    if (targetY >= worldHeight) targetY -= worldHeight;
+
+                    if (targetX > worldWidth/2 - 100 && targetX < worldWidth/2 + 100 && targetY > worldHeight/2 - 100 && targetY < worldHeight/2 + 100) continue;
+
+                    let cell = this.grid[targetX][targetY];
+
+                    if (cell instanceof Mine) this.grid[targetX][targetY] = false;
+                }
             }
         }
     }
