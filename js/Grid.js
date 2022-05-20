@@ -398,7 +398,20 @@ class Grid {
         for (let i = player.x+player.cameraX - visibleGridWidth; i < player.x+player.cameraX + visibleGridWidth+1; i++) {
             for (let j = player.y+player.cameraY - visibleGridHeight; j < player.y+player.cameraY + visibleGridHeight+1; j++) {
 
-                if (!this.grid[i][j].fog) this.grid[i][j].display();
+                let targetX = i;
+                let targetY = j;
+
+                if (targetX >= worldWidth || targetX < 0) targetX = mod(targetX, worldWidth);
+                if (targetY >= worldHeight || targetY < 0)  targetY = mod(targetY, worldHeight);
+
+                push();
+                if (targetX > i) translate(-worldWidth*cellSize, 0);
+                else if (targetX < i) translate(worldWidth*cellSize, 0);
+                if (targetY > j) translate(0, -worldHeight*cellSize);
+                else if (targetY < j) translate(0, worldHeight*cellSize);
+
+                if (!this.grid[targetX][targetY].fog) this.grid[targetX][targetY].display();
+                pop();
             }
         }
 

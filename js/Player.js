@@ -44,7 +44,9 @@ class Player {
 
         if (!this.isInRoom) {
 
-            if ((grid.grid[this.x+x][this.y+y] instanceof Rock || grid.grid[this.x+x][this.y+y].height == -1) && !grid.grid[this.x+x][this.y+y].eaten) {
+            let targetCell = grid.grid[mod(this.x+x, worldWidth)][mod(this.y+y, worldHeight)];
+
+            if ((targetCell instanceof Rock || targetCell.height == -1) && !targetCell.eaten) {
 
                 if (this.inventory.pickaxe > 0) {
                     this.inventory.pickaxe--;
@@ -55,6 +57,9 @@ class Player {
 
             this.x += x;
             this.y += y;
+
+            this.x = mod(this.x, worldWidth);
+            this.y = mod(this.y, worldHeight);
 
             this.eatCell(grid.grid[this.x][this.y]);
             grid.clearFog(this.x, this.y);
