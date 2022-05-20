@@ -52,6 +52,7 @@ let lastMoveWasDiagonal = false;
 let hasMoved = false;
 let hasMovedDiagonally = false;
 let displayJumpTooltip = false;
+let mapDisplayed = false;
 
 function preload(){
 
@@ -107,8 +108,9 @@ function draw() {
 
 	pop();
 
-    displayUI();
+	if (mapDisplayed) displayMap();
 
+    displayUI();
 }
 
 function displayUI() {
@@ -150,7 +152,8 @@ function displayToolip() {
 		currentRoomCell = currentCell.grid[player.roomX][player.roomY];
 	}
 
-    if (!hasMoved) tooltip = "wasd or arrow keys to walk";
+    if (mapDisplayed) tooltip = "press m to hide map";
+    else if (!hasMoved) tooltip = "wasd or arrow keys to walk";
     else if (displayJumpTooltip) tooltip = "press spacebar to jump";
     else if (currentCell instanceof Shop && !player.isInRoom) tooltip = "press e to enter";
     else if (player.isInRoom && currentRoomCell.symbol == symbols.door) tooltip = "press e to exit";
@@ -220,6 +223,8 @@ function keyReleased() {
 		let nextHouse = houses[nextHouseIndex];
 		player.x = nextHouse.x/cellSize;
 		player.y = nextHouse.y/cellSize;
+	} else if (keyCode == 77) { // m
+		mapDisplayed = !mapDisplayed;
 	} else if (keyCode == 72 && !player.isInRoom && currentCell instanceof EmptyCell && currentCell.height == 0 && player.inventory.building_materials > 0) { // h
 		let house = new House(player.x, player.y);
 		grid.grid[player.x][player.y] = house;
@@ -276,4 +281,39 @@ function focus() {
 
 function mod(n, m) {
 	return ((n % m) + m) % m;
+}
+
+function displayMap() {
+
+	push();
+	translate(width/2, height/2);
+	translate(-worldWidth/2/2, -worldHeight/2/2);
+	background(palette.fog);
+
+	for (let i = 0; i < worldWidth; i+=8) {
+		for (let j = 0; j < worldHeight; j+=8) {
+
+			let cell = grid.grid[i][j];
+			if (cell.fog) continue;
+
+			if (cell instanceof Rock) fill(palette.wall);
+			else if (cell instanceof NPC) fill(palette.water);
+			else if (cell instanceof Shop) fill(palette.water);
+			else if (cell instanceof Note && cell.height == -1) fill(palette.wall);
+			else if (cell instanceof Note && cell.height != -1) fill(palette.water);
+			else if (cell.height >= 5) fill(palette.snow);
+			else if (cell.height == 4) fill(palette.mountain);
+			else if (cell.height == 3) fill(palette.trees);
+			else if (cell.height == 2) fill(palette.grass);
+			else if (cell.height == 1) fill(palette.sand);
+			else if (cell.height == 0) fill(palette.water);
+
+			rect(i/2, j/2, 4)
+		}
+	}
+
+	fill(palette.white);
+	rect(round(player.x/8) * 8/2, round(player.y/8) * 8/2, 4)
+
+	pop();
 }
