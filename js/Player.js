@@ -20,7 +20,8 @@ class Player {
 
         this.inventory = {
             pickaxe: 0,
-            building_materials: 0
+            building_materials: 0,
+            invisibility_cloak: 0
         }
     }
 
@@ -34,7 +35,8 @@ class Player {
 
         this.inventory = {
             pickaxe: 0,
-            building_materials: 0
+            building_materials: 0,
+            invisibility_cloak: 0
         }
     }
 

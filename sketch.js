@@ -28,10 +28,12 @@ const symbols = {
 	item: "★",
 	pickaxe: "⛏",
 	emptyCell: "",
-	building_materials: "⚒"
+	building_materials: "⚒",
+	invisibility_cloak: "⛉"
 };
 
-const items = ["pickaxe3", "building materials1"];
+const items = ["pickaxe3", "building materials2"];
+// const items = ["pickaxe3", "building materials2", "invisibility cloak1"];
 
 let verbs = [];
 let adjectives = [];
