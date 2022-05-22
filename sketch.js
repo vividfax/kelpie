@@ -34,6 +34,7 @@ const symbols = {
 
 const items = ["pickaxe3", "building materials2"];
 // const items = ["pickaxe3", "building materials2", "invisibility cloak1"];
+let landmarks;
 
 let verbs = [];
 let adjectives = [];
@@ -62,6 +63,8 @@ function preload(){
 	adjectives.pop();
 	nouns = loadStrings("txt/nouns.txt");
 	nouns.pop();
+
+	landmarks = loadJSON("landmarks.json");
 }
 
 function setup() {

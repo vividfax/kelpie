@@ -36,6 +36,7 @@ class Grid {
         this.generateMines();
         this.generateDeserts();
         this.generateLakes();
+        this.placeLandmarks();
 
         this.placeEmptyCells();
         this.clearAreaAroundPlayer(2);
@@ -214,6 +215,40 @@ class Grid {
                     let cell = this.grid[targetX][targetY];
 
                     if (cell instanceof Mine) this.grid[targetX][targetY] = false;
+                }
+            }
+        }
+    }
+
+    placeLandmarks() {
+
+        for (let i = 0; i < 50; i++) {
+
+            let landmark = random(landmarks.landmarks);
+            let xPositon = int(random(worldWidth));
+            let yPosition = int(random(worldHeight));
+
+            if (xPositon > worldWidth/2 - 20 && xPositon < worldWidth/2 + 20 && yPosition > worldHeight/2 - 20 && yPosition < worldHeight/2 + 20) continue;
+
+            this.placeLandmark(landmark, xPositon, yPosition);
+        }
+    }
+
+    placeLandmark(arr, x, y) {
+
+        for (let i = 0; i < arr.length; i++) {
+            for (let j = 0; j < arr[0].length; j++) {
+
+                let targetX = x+j;
+                let targetY = y+i;
+
+                if (targetX >= worldWidth) targetX -= worldWidth;
+                if (targetY >= worldHeight) targetY -= worldHeight;
+
+                if (arr[i][j] == 0) {
+                    this.grid[targetX][targetY] = false;
+                } else if (arr[i][j] == 1 && this.grid[targetX][targetY] instanceof Rock == false) {
+                    this.grid[targetX][targetY] = new Rock(targetX, targetY);
                 }
             }
         }
