@@ -166,7 +166,7 @@ class Grid {
 
     generateDeserts() {
 
-        for (let i = 0; i < 200; i++) {
+        for (let i = 0; i < 5; i++) {
 
             let randomX = int(random(worldWidth));
             let randomY = int(random(worldHeight));
@@ -194,7 +194,7 @@ class Grid {
 
     generateLakes() {
 
-        for (let i = 0; i < 200; i++) {
+        for (let i = 0; i < 5; i++) {
 
             let randomX = int(random(worldWidth));
             let randomY = int(random(worldHeight));
@@ -222,9 +222,9 @@ class Grid {
 
     placeLandmarks() {
 
-        for (let i = 0; i < 50; i++) {
+        for (let i = 0; i < landmarks.landmarks.length; i++) {
 
-            let landmark = random(landmarks.landmarks);
+            let landmark = landmarks.landmarks[i];
             let xPositon = int(random(worldWidth));
             let yPosition = int(random(worldHeight));
 
@@ -353,7 +353,7 @@ class Grid {
 
                 let cell = this.grid[i][j];
 
-                if (int(random(300)) == 1 && (cell instanceof EmptyCell && cell.height == 0)) {
+                if (int(random(100)) == 1 && (cell instanceof EmptyCell && cell.height == 0)) {
 
                     let h = cell.height;
                     if (cell instanceof Rock) h = -1;

@@ -133,10 +133,11 @@ class Player {
 
         currentCell.asked = true;
 
-        if (this.memory.includes(currentCell.subject)) {
+        if (currentCell.subject != "" && this.memory.includes(currentCell.subject)) {
             player.points += 200;
-            currentCell.generateQuestion();
+            //currentCell.generateQuestion();
             currentCell.answered = true;
+            currentCell.silence();
         }
     }
 

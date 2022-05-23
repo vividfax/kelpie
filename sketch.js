@@ -29,7 +29,8 @@ const symbols = {
 	pickaxe: "⛏",
 	emptyCell: "",
 	building_materials: "⚒",
-	invisibility_cloak: "⛉"
+	invisibility_cloak: "⛉",
+	people: ["𓀔", "𓀀", "𓀁", "𓀂", "𓀃", "𓀉", "𓁎", "𓀦"]
 };
 
 const items = ["pickaxe3", "building materials2"];
@@ -44,8 +45,8 @@ let grid;
 let player;
 let houses = [];
 
-let worldWidth = 1000;
-let worldHeight = 1000;
+let worldWidth = 150;
+let worldHeight = 150;
 let cellSize = 45;
 let renderScale = 0.5;
 
