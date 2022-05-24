@@ -45,8 +45,8 @@ let grid;
 let player;
 let houses = [];
 
-let worldWidth = 150;
-let worldHeight = 150;
+let worldWidth = 100;
+let worldHeight = 100;
 let cellSize = 45;
 let renderScale = 0.5;
 
@@ -123,7 +123,7 @@ function displayUI() {
 	stroke(palette.black);
 	strokeWeight(80);
 	noFill();
-	rect(0,20, width, height-40, 50);
+	rect(0, 20, width, height-40, 50);
 	pop();
 
 	fill(palette.white);
@@ -141,6 +141,21 @@ function displayUI() {
 	else topString += "\n";
 
 	text(topString, width/2, 30);
+
+	let cornerString = "";
+
+	if (grid.currentNumberOfNPCs == 0) {
+		cornerString = grid.originalNumberOfNPCs + " souls saved";
+	} else if (grid.currentNumberOfNPCs == 1) {
+		cornerString = grid.currentNumberOfNPCs + " stranded soul";
+	} else {
+		cornerString = grid.currentNumberOfNPCs + " stranded souls";
+	}
+
+	push();
+	textAlign(RIGHT);
+	text(cornerString, width-40, 30);
+	pop();
 
     displayToolip();
 }

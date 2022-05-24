@@ -7,7 +7,11 @@ class Grid {
         this.grid = this.new2dArray();
         this.mineDensity = 0.2;
 
+        this.currentNumberOfNPCs = 0;
+
         this.createGrid();
+
+        this.originalNumberOfNPCs = this.currentNumberOfNPCs;
     }
 
     new2dArray() {
@@ -268,10 +272,17 @@ class Grid {
 
     clearAreaAroundPlayer(radius) {
 
+        let notePosition = int(random(6));
+        let index = 0;
+
         for (let i = -radius; i < radius+1; i++) {
             for (let j = -radius; j < radius+1; j++) {
 
                 this.grid[int(this.width/2)+i][int(this.height/2)+j] = new EmptyCell(int(this.width/2)+i, int(this.height/2)+j);
+
+                if (i == j) continue;
+                if (index == notePosition && radius == 1) this.grid[int(this.width/2)+i][int(this.height/2)+j] = new Note(int(this.width/2)+i, int(this.height/2)+j, 0);
+                index++;
             }
         }
     }
@@ -376,7 +387,7 @@ class Grid {
 
                 let cell = this.grid[i][j];
 
-                if (int(random(100)) == 1 && (cell instanceof EmptyCell && cell.height == 0)) {
+                if (int(random(300)) == 1 && (cell instanceof EmptyCell && cell.height == 0)) {
 
                     let h = cell.height;
                     if (cell instanceof Rock) h = -1;
@@ -392,9 +403,11 @@ class Grid {
         for (let i = 0; i < this.width; i++) {
             for (let j = 0; j < this.height; j++) {
 
+                if (i > worldWidth/2 - 8 && i < worldWidth/2 + 8 && j > worldHeight/2 - 8 && j < worldHeight/2 + 8) continue;
+
                 let cell = this.grid[i][j];
 
-                if ((int(random(30)) == 1 && cell instanceof Rock) || ((int(random(10)) == 1 && cell instanceof EmptyCell && cell.height == 0))) {
+                if ((int(random(30)) == 1 && cell instanceof Rock) || ((int(random(30)) == 1 && cell instanceof EmptyCell && cell.height == 0))) {
 
                     let h = cell.height;
                     if (cell instanceof Rock) h = -1;
@@ -410,11 +423,17 @@ class Grid {
         for (let i = 0; i < this.width; i++) {
             for (let j = 0; j < this.height; j++) {
 
+                if (i > worldWidth/2 - 10 && i < worldWidth/2 + 10 && j > worldHeight/2 - 10 && j < worldHeight/2 + 10) continue;
+
                 let cell = this.grid[i][j];
 
-                if (int(random(20)) == 1 && (cell instanceof EmptyCell && cell.height == 0)) {
+                if ((int(random(40)) == 1 && (cell instanceof EmptyCell && cell.height == 0)) || (cell instanceof Rock && int(random(40)) == 1)) {
 
-                    this.grid[i][j] = new NPC(i, j);
+                    let h = cell.height;
+                    if (cell instanceof Rock) h = -1;
+
+                    this.grid[i][j] = new NPC(i, j, h);
+                    this.currentNumberOfNPCs++;
                 }
             }
         }

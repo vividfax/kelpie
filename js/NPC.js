@@ -1,16 +1,17 @@
 class NPC {
 
-    constructor(x, y) {
+    constructor(x, y, h) {
 
         this.x = x * cellSize;
         this.y = y * cellSize;
-        this.height = 0;
+        this.height = h;
         this.symbol = random(symbols.people);
         this.fog = true;
         this.subject;
         this.question;
         this.asked = false;
         this.answered = false;
+        this.eaten = false;
 
         this.generateQuestion();
     }
@@ -35,6 +36,7 @@ class NPC {
 
         this.subject = "";
         this.question = "";
+        this.symbol = symbols.wall;
     }
 
     getTooltip() {
@@ -72,9 +74,9 @@ class NPC {
 
         rect(this.x, this.y, cellSize);
 
-        if (this.subject == "") return;
+        if (this.subject == "" && this.eaten) return;
 
-        if (this.height == 1 || this.height == 2 || this.height >= 5) {
+        if (this.height == 1 || this.height == 2 || this.height >= 5 || this.symbol == symbols.wall) {
             fill(palette.black);
         } else {
             fill(palette.white);

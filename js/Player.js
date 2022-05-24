@@ -107,7 +107,7 @@ class Player {
             this.memory = cell.phrase;
         } else if (cell instanceof Rock && !cell.eaten) {
             cell.eaten = true;
-        } else if (cell instanceof Note && !cell.eaten && cell.height == -1) {
+        } else if ((cell instanceof Note || cell instanceof NPC) && !cell.eaten && cell.height == -1) {
             cell.eaten = true;
         }
 
@@ -135,6 +135,7 @@ class Player {
 
         if (currentCell.subject != "" && this.memory.includes(currentCell.subject)) {
             player.points += 200;
+            grid.currentNumberOfNPCs--;
             //currentCell.generateQuestion();
             currentCell.answered = true;
             currentCell.silence();
