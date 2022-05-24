@@ -59,16 +59,23 @@ let mapDisplayed = false;
 function preload(){
 
 	verbs = loadStrings("txt/verbs.txt");
-	verbs.pop();
 	adjectives = loadStrings("txt/adjectives.txt");
-	adjectives.pop();
 	nouns = loadStrings("txt/nouns.txt");
-	nouns.pop();
 
 	landmarks = loadJSON("landmarks.json");
 }
 
 function setup() {
+
+	verbs.pop();
+	adjectives.pop();
+	nouns.pop();
+	shuffle(verbs, true);
+	shuffle(adjectives, true);
+	shuffle(nouns, true);
+	verbs = verbs.slice(0, 5);
+	adjectives = adjectives.slice(0, 5);
+	nouns = nouns.slice(0, 5);
 
 	createCanvas(windowWidth, windowHeight);
 

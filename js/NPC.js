@@ -74,7 +74,7 @@ class NPC {
 
         rect(this.x, this.y, cellSize);
 
-        if (this.subject == "" && this.eaten) return;
+        if (this.subject == "" || (this.eaten && this.subject == "")) return;
 
         if (this.height == 1 || this.height == 2 || this.height >= 5 || this.symbol == symbols.wall) {
             fill(palette.black);
