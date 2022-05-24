@@ -43,6 +43,7 @@ class Grid {
         this.calculateHeight();
 
         this.placeShops();
+        this.placeRuins();
         this.placeNotes();
         this.placeNPCs();
         this.clearAreaAroundPlayer(1);
@@ -351,6 +352,8 @@ class Grid {
         for (let i = 0; i < this.width; i++) {
             for (let j = 0; j < this.height; j++) {
 
+                if (i > worldWidth/2 - 10 && i < worldWidth/2 + 10 && j > worldHeight/2 - 10 && j < worldHeight/2 + 10) continue;
+
                 let cell = this.grid[i][j];
 
                 if (int(random(100)) == 1 && (cell instanceof EmptyCell && cell.height == 0)) {
@@ -359,6 +362,26 @@ class Grid {
                     if (cell instanceof Rock) h = -1;
 
                     this.grid[i][j] = new Shop(i, j, h);
+                }
+            }
+        }
+    }
+
+    placeRuins() {
+
+        for (let i = 0; i < this.width; i++) {
+            for (let j = 0; j < this.height; j++) {
+
+                if (i > worldWidth/2 - 10 && i < worldWidth/2 + 10 && j > worldHeight/2 - 10 && j < worldHeight/2 + 10) continue;
+
+                let cell = this.grid[i][j];
+
+                if (int(random(100)) == 1 && (cell instanceof EmptyCell && cell.height == 0)) {
+
+                    let h = cell.height;
+                    if (cell instanceof Rock) h = -1;
+
+                    this.grid[i][j] = new Ruin(i, j, h);
                 }
             }
         }

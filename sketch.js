@@ -162,6 +162,7 @@ function displayToolip() {
     else if (currentCell instanceof Shop && !player.isInRoom) tooltip = "press e to enter";
     else if (player.isInRoom && currentRoomCell.symbol == symbols.door) tooltip = "press e to exit";
     else if (currentCell instanceof Shop && player.isInRoom && currentRoomCell) tooltip = currentRoomCell.getTooltip();
+    else if (currentCell instanceof Ruin && player.points >= 20) tooltip = "press h to repair for 20 " + symbols.heart;
     else if (currentCell instanceof Note) tooltip = currentCell.getTooltip();
     else if (currentCell instanceof House && houses.length > 1) tooltip = "press t to fast travel";
     else if (currentCell instanceof EmptyCell && currentCell.height == 0 && player.inventory.building_materials > 0) tooltip = "press h to build a house";
@@ -234,7 +235,12 @@ function keyReleased() {
 		grid.grid[player.x][player.y] = house;
 		houses.push(house);
 		player.inventory.building_materials--;
-	}  else if (keyCode == 69 && player.isInRoom && currentRoomCell instanceof EmptyCell && currentRoomCell.symbol == symbols.door) { // e
+	} else if (keyCode == 72 && currentCell instanceof Ruin && player.points >= 20) { // h
+		let house = new House(player.x, player.y);
+		grid.grid[player.x][player.y] = house;
+		houses.push(house);
+		player.score -= 20;
+	} else if (keyCode == 69 && player.isInRoom && currentRoomCell instanceof EmptyCell && currentRoomCell.symbol == symbols.door) { // e
         player.exitRoom();
     } else if ((keyCode == 65 && keyIsDown(87)) || (keyCode == 87 && keyIsDown(65)) || (keyCode == UP_ARROW && keyIsDown(LEFT_ARROW)) || (keyCode == LEFT_ARROW && keyIsDown(UP_ARROW))) {
 		player.move(-1, -1);
