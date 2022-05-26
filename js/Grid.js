@@ -50,7 +50,7 @@ class Grid {
         this.clearAreaAroundWalls();
         this.clearAreaAroundPoint(this.width/2, this.height/2, 2);
         this.clearAreaAroundPoint(this.width/2 - this.startingLevelWidth/2 + 1, this.height/2 - this.startingLevelHeight/2 + 1, 1);
-        this.clearAreaAroundPoint(this.width/2 - this.startingLevelWidth/2, this.height/2 - this.startingLevelHeight/2 - 14, 1);
+        //this.clearAreaAroundPoint(this.width/2 - this.startingLevelWidth/2, this.height/2 - this.startingLevelHeight/2 - 14, 1);
         this.calculateHeight();
 
         this.placeShops();
@@ -301,8 +301,8 @@ class Grid {
         for (let i = 0; i < this.width; i++) {
             for (let j = 0; j < this.height; j++) {
 
-                if (i+2 < this.width/2 - levelWidth/2 - wallWidth || i-2 > this.width/2 + levelWidth/2 + wallWidth) continue;
-                if (j+2 < this.height/2 - levelHeight/2 - wallWidth || j-2 > this.height/2 + levelHeight/2 + wallWidth) continue;
+                if (i < this.width/2 - levelWidth/2 - wallWidth || i > this.width/2 + levelWidth/2 + wallWidth) continue;
+                if (j < this.height/2 - levelHeight/2 - wallWidth || j > this.height/2 + levelHeight/2 + wallWidth) continue;
 
                 if (i < this.width/2 - levelWidth/2 || i > this.width/2 + levelWidth/2 || j < this.height/2 - levelHeight/2 || j > this.height/2 + levelHeight/2) {
                     this.clearAreaAroundPoint(i, j, 1);
@@ -413,7 +413,7 @@ class Grid {
                     let h = cell.height;
                     if (cell instanceof Rock) h = -1;
 
-                    this.grid[i][j] = new Shop(i, j, h);
+                    this.grid[i][j] = new Shop(i, j, h, false);
                 }
             }
         }
@@ -504,7 +504,7 @@ class Grid {
 
         let levelWidth = this.startingLevelWidth;
         let levelHeight = this.startingLevelHeight;
-        let wallWidth = 12;
+        let wallWidth = 10;
 
         for (let i = 0; i < this.width; i++) {
             for (let j = 0; j < this.height; j++) {
@@ -525,13 +525,13 @@ class Grid {
         let targetX = this.width/2 - this.startingLevelWidth/2 + 1;
         let targetY = this.height/2 - this.startingLevelHeight/2 + 1;
 
-        this.grid[targetX][targetY] = new Shop(targetX, targetY, 0);
-        this.grid[targetX-1][targetY-3] = new Ruin(targetX-1, targetY-3);
+        this.grid[targetX][targetY] = new Shop(targetX, targetY, 0, true);
+        //this.grid[targetX-1][targetY-3] = new Ruin(targetX-1, targetY-3);
 
-        targetX = this.width/2 - this.startingLevelWidth/2;
-        targetY = this.height/2 - this.startingLevelHeight/2 - 14;
+        // targetX = this.width/2 - this.startingLevelWidth/2;
+        // targetY = this.height/2 - this.startingLevelHeight/2 - 14;
 
-        this.grid[targetX][targetY] = new Ruin(targetX, targetY);
+        // this.grid[targetX][targetY] = new Ruin(targetX, targetY);
     }
 
     reset() {
@@ -541,7 +541,7 @@ class Grid {
 
                 this.grid[i][j].fog = true;
 
-                if (this.grid[i][j].eaten) this.grid[i][j].eaten = false;
+                if (this.grid[i][j].eaten && this.grid[i][j] instanceof Rock == false) this.grid[i][j].eaten = false;
             }
         }
 

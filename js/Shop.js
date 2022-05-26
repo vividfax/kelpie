@@ -1,12 +1,13 @@
 class Shop {
 
-    constructor(x, y, h) {
+    constructor(x, y, h, onlyPickaxes) {
 
         this.x = x * cellSize;
         this.y = y * cellSize;
         this.height = h;
         this.symbol = symbols.door;
         this.fog = true;
+        this.onlyPickaxes = onlyPickaxes;
 
         this.w = 9;
         this.h = 6;
@@ -33,6 +34,8 @@ class Shop {
         }
 
         let randomisedItems = shuffle(items);
+
+        if (this.onlyPickaxes) randomisedItems = [items[0]];
 
         for (let i = 0; i < 3; i++) {
             if (!randomisedItems[i]) {
