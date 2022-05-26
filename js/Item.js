@@ -6,26 +6,26 @@ class Item {
         this.x = x * cellSize;
         this.y = y * cellSize;
         this.amount = Number(type.slice(-1));
-        this.price = 50;
+        this.price = 1;
         this.symbol = symbols[this.type.replace(" ", "_")];
         this.height = h;
     }
 
     buy() {
 
-        if (player.points >= this.price) {
+        if (player.coins >= this.price) {
 
             player.inventory[this.type.replace(" ", "_")] += this.amount;
-            player.points -= this.price;
+            player.coins -= this.price;
         }
     }
 
     getTooltip() {
 
-        if (player.points >= this.price) {
-            return "press b to buy " + this.amount +  " " + this.type + " for "  + this.price + " " + symbols.heart;
+        if (player.stamina >= this.price) {
+            return "press b to buy " + this.amount +  " " + this.type + " for "  + this.price + " " + symbols.coin;
         } else {
-            return this.amount +  " " + this.type + " for "  + this.price + " " + symbols.heart;
+            return this.amount +  " " + this.type + " for "  + this.price + " " + symbols.coin;
         }
     }
 

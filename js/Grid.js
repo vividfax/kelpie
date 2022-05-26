@@ -7,6 +7,9 @@ class Grid {
         this.grid = this.new2dArray();
         this.mineDensity = 0.2;
 
+        this.startingLevelWidth = 60;
+        this.startingLevelHeight = 40;
+
         this.currentNumberOfNPCs = 0;
 
         this.createGrid();
@@ -37,21 +40,27 @@ class Grid {
         rocksGrid = this.growRocks(rocksGrid);
         this.placeRocks(rocksGrid);
 
+
         this.generateMines();
         this.generateDeserts();
         this.generateLakes();
         this.placeLandmarks();
 
         this.placeEmptyCells();
-        this.clearAreaAroundPlayer(2);
+        this.clearAreaAroundWalls();
+        this.clearAreaAroundPoint(this.width/2, this.height/2, 2);
+        this.clearAreaAroundPoint(this.width/2 - this.startingLevelWidth/2 + 1, this.height/2 - this.startingLevelHeight/2 + 1, 1);
+        this.clearAreaAroundPoint(this.width/2 - this.startingLevelWidth/2, this.height/2 - this.startingLevelHeight/2 - 14, 1);
         this.calculateHeight();
 
         this.placeShops();
         this.placeRuins();
         this.placeNotes();
         this.placeNPCs();
-        this.clearAreaAroundPlayer(1);
+        this.clearAreaAroundPoint(this.width/2, this.height/2, 1);
         this.placeHouse();
+        this.placeWalls();
+        this.arrangeStartingLevel();
     }
 
     generateRocks() {
@@ -67,7 +76,7 @@ class Grid {
                     rocksGrid[i][j] = false;
                 }
 
-                if (i > worldWidth/2 - 20 && i < worldWidth/2 + 20 && j > worldHeight/2 - 20 && j < worldHeight/2 + 20) rocksGrid[i][j] = false;
+                if (i > worldWidth/2 - 40 && i < worldWidth/2 + 40 && j > worldHeight/2 - 40 && j < worldHeight/2 + 40) rocksGrid[i][j] = false;
             }
         }
 
@@ -160,7 +169,21 @@ class Grid {
         for (let i = 0; i < this.width; i++) {
             for (let j = 0; j < this.height; j++) {
 
-                if (mineArray[place] == true && this.grid[i][j] instanceof Rock == false) {
+                if (i > this.width/2 - this.startingLevelWidth*0.2 && i < this.width/2 + this.startingLevelWidth*0.2 && j > this.height/2 - this.startingLevelHeight*0.3 && j < this.height/2 + this.startingLevelHeight*0.3) {
+                    if (int(random(4)) == 0) {
+                        this.grid[i][j] = new Mine(i, j);
+                    }
+                    continue;
+                }
+
+                if (i > this.width/2 - this.startingLevelWidth && i < this.width/2 + this.startingLevelWidth && j > this.height/2 - this.startingLevelHeight && j < this.height/2 + this.startingLevelHeight) {
+                    if (int(random(5)) == 0) {
+                        this.grid[i][j] = new Mine(i, j);
+                    }
+                    continue;
+                }
+
+                if (mineArray[place] == true && this.grid[i][j] instanceof Rock == false && this.grid[i][j] instanceof Shop == false) {
                     this.grid[i][j] = new Mine(i, j);
                 }
 
@@ -233,7 +256,7 @@ class Grid {
             let xPositon = int(random(worldWidth));
             let yPosition = int(random(worldHeight));
 
-            if (xPositon > worldWidth/2 - 20 && xPositon < worldWidth/2 + 20 && yPosition > worldHeight/2 - 20 && yPosition < worldHeight/2 + 20) continue;
+            if (xPositon > worldWidth/2 - 60 && xPositon < worldWidth/2 + 60 && yPosition > worldHeight/2 - 60 && yPosition < worldHeight/2 + 60) continue;
 
             this.placeLandmark(landmark, xPositon, yPosition);
         }
@@ -264,13 +287,31 @@ class Grid {
         for (let i = 0; i < this.width; i++) {
             for (let j = 0; j < this.height; j++) {
 
-
                 if (this.grid[i][j] == false) this.grid[i][j] = new EmptyCell(i, j);
             }
         }
     }
 
-    clearAreaAroundPlayer(radius) {
+    clearAreaAroundWalls() {
+
+        let levelWidth = this.startingLevelWidth;
+        let levelHeight = this.startingLevelHeight;
+        let wallWidth = 10;
+
+        for (let i = 0; i < this.width; i++) {
+            for (let j = 0; j < this.height; j++) {
+
+                if (i+2 < this.width/2 - levelWidth/2 - wallWidth || i-2 > this.width/2 + levelWidth/2 + wallWidth) continue;
+                if (j+2 < this.height/2 - levelHeight/2 - wallWidth || j-2 > this.height/2 + levelHeight/2 + wallWidth) continue;
+
+                if (i < this.width/2 - levelWidth/2 || i > this.width/2 + levelWidth/2 || j < this.height/2 - levelHeight/2 || j > this.height/2 + levelHeight/2) {
+                    this.clearAreaAroundPoint(i, j, 1);
+                }
+            }
+        }
+    }
+
+    clearAreaAroundPoint(x, y, radius) {
 
         let notePosition = int(random(6));
         let index = 0;
@@ -278,10 +319,10 @@ class Grid {
         for (let i = -radius; i < radius+1; i++) {
             for (let j = -radius; j < radius+1; j++) {
 
-                this.grid[int(this.width/2)+i][int(this.height/2)+j] = new EmptyCell(int(this.width/2)+i, int(this.height/2)+j);
+                this.grid[int(x)+i][int(y)+j] = new EmptyCell(int(x)+i, int(y)+j);
 
                 if (i == j) continue;
-                if (index == notePosition && radius == 1) this.grid[int(this.width/2)+i][int(this.height/2)+j] = new Note(int(this.width/2)+i, int(this.height/2)+j, 0);
+                if (index == notePosition && radius == 1 && x == this.width/2 && y == this.height/2) this.grid[int(x)+i][int(y)+j] = new Note(int(x)+i, int(y)+j, 0);
                 index++;
             }
         }
@@ -363,7 +404,7 @@ class Grid {
         for (let i = 0; i < this.width; i++) {
             for (let j = 0; j < this.height; j++) {
 
-                if (i > worldWidth/2 - 10 && i < worldWidth/2 + 10 && j > worldHeight/2 - 10 && j < worldHeight/2 + 10) continue;
+                if (i > worldWidth/2 - 40 && i < worldWidth/2 + 40 && j > worldHeight/2 - 40 && j < worldHeight/2 + 40) continue;
 
                 let cell = this.grid[i][j];
 
@@ -383,7 +424,7 @@ class Grid {
         for (let i = 0; i < this.width; i++) {
             for (let j = 0; j < this.height; j++) {
 
-                if (i > worldWidth/2 - 10 && i < worldWidth/2 + 10 && j > worldHeight/2 - 10 && j < worldHeight/2 + 10) continue;
+                if (i > worldWidth/2 - 40 && i < worldWidth/2 + 40 && j > worldHeight/2 - 40 && j < worldHeight/2 + 40) continue;
 
                 let cell = this.grid[i][j];
 
@@ -407,6 +448,12 @@ class Grid {
 
                 let cell = this.grid[i][j];
 
+                if (i > worldWidth/2 - this.startingLevelWidth/2 && i < worldWidth/2 + this.startingLevelWidth/2 && j > worldHeight/2 - this.startingLevelHeight/2 && j < worldHeight/2 + this.startingLevelHeight/2) {
+                    if (int(random(10)) == 1 && cell instanceof EmptyCell && cell.height == 0) {
+                        this.grid[i][j] = new Note(i, j, 0);
+                    }
+                }
+
                 if ((int(random(30)) == 1 && cell instanceof Rock) || ((int(random(30)) == 1 && cell instanceof EmptyCell && cell.height == 0))) {
 
                     let h = cell.height;
@@ -423,10 +470,17 @@ class Grid {
         for (let i = 0; i < this.width; i++) {
             for (let j = 0; j < this.height; j++) {
 
-                if (i > worldWidth/2 - 10 && i < worldWidth/2 + 10 && j > worldHeight/2 - 10 && j < worldHeight/2 + 10) continue;
+                if (i > worldWidth/2 - 8 && i < worldWidth/2 + 8 && j > worldHeight/2 - 8 && j < worldHeight/2 + 8) continue;
 
                 let cell = this.grid[i][j];
 
+                if (i > worldWidth/2 - this.startingLevelWidth/2 && i < worldWidth/2 + this.startingLevelWidth/2 && j > worldHeight/2 - this.startingLevelHeight/2 && j < worldHeight/2 + this.startingLevelHeight/2) {
+                    if (int(random(10)) == 1 && (cell instanceof EmptyCell && cell.height == 0)) {
+                        this.grid[i][j] = new NPC(i, j, 0);
+                        this.currentNumberOfNPCs++;
+                    }
+                    continue;
+                }
                 if ((int(random(40)) == 1 && (cell instanceof EmptyCell && cell.height == 0)) || (cell instanceof Rock && int(random(40)) == 1)) {
 
                     let h = cell.height;
@@ -444,6 +498,40 @@ class Grid {
         let house = new House(int(this.width/2), int(this.height/2));
         this.grid[int(this.width/2)][int(this.height/2)] = house;
         houses.push(house);
+    }
+
+    placeWalls() {
+
+        let levelWidth = this.startingLevelWidth;
+        let levelHeight = this.startingLevelHeight;
+        let wallWidth = 12;
+
+        for (let i = 0; i < this.width; i++) {
+            for (let j = 0; j < this.height; j++) {
+
+                if (this.grid[i][j] instanceof Rock) continue;
+                if (i < this.width/2 - levelWidth/2 - wallWidth || i > this.width/2 + levelWidth/2 + wallWidth) continue;
+                if (j < this.height/2 - levelHeight/2 - wallWidth || j > this.height/2 + levelHeight/2 + wallWidth) continue;
+
+                if (i < this.width/2 - levelWidth/2 || i > this.width/2 + levelWidth/2 || j < this.height/2 - levelHeight/2 || j > this.height/2 + levelHeight/2) {
+                    this.grid[i][j] = new Rock(i, j);
+                }
+            }
+        }
+    }
+
+    arrangeStartingLevel() {
+
+        let targetX = this.width/2 - this.startingLevelWidth/2 + 1;
+        let targetY = this.height/2 - this.startingLevelHeight/2 + 1;
+
+        this.grid[targetX][targetY] = new Shop(targetX, targetY, 0);
+        this.grid[targetX-1][targetY-3] = new Ruin(targetX-1, targetY-3);
+
+        targetX = this.width/2 - this.startingLevelWidth/2;
+        targetY = this.height/2 - this.startingLevelHeight/2 - 14;
+
+        this.grid[targetX][targetY] = new Ruin(targetX, targetY);
     }
 
     reset() {
@@ -487,7 +575,7 @@ class Grid {
                 if (targetY > j) translate(0, -worldHeight*cellSize);
                 else if (targetY < j) translate(0, worldHeight*cellSize);
 
-                if (!this.grid[targetX][targetY].fog) this.grid[targetX][targetY].display();
+                this.grid[targetX][targetY].display();
                 pop();
             }
         }

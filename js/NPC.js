@@ -46,7 +46,7 @@ class NPC {
         if (!this.asked && this.subject != "") {
             return this.question + ` they ask` + `\n press r to reply`;
         } else if (this.answered) {
-            return 'you say ' + player.memory + '\nand you gain 200 ' + symbols.heart;
+            return 'you say ' + player.memory + '\nand you gain 2 ' + symbols.coin;
         } else if (this.subject != "") {
             return 'you say ' + player.memory + '\n' + 'and they stare at you blankly';
         }

@@ -10,7 +10,8 @@ class Player {
         this.cameraY = 0;
         this.reset();
         this.symbol = symbols.smiley;
-        this.points = 5;
+        this.stamina = 5;
+        this.coins = 0;
         this.dead = false;
         this.jumpOffset = 0;
         this.memory = "nothing";
@@ -99,10 +100,10 @@ class Player {
 
         if (cell instanceof EmptyCell && cell.height > 0 && !cell.eaten) {
             cell.eaten = true;
-            this.points -= cell.height;
+            this.stamina -= cell.height;
         } else if (cell instanceof Mine && !cell.eaten) {
             cell.eaten = true;
-            this.points += 2;
+            this.stamina += 2;
         } else if (cell instanceof Note && cell.opened) {
             this.memory = cell.phrase;
         } else if (cell instanceof Rock && !cell.eaten) {
@@ -111,8 +112,8 @@ class Player {
             cell.eaten = true;
         }
 
-        if (this.points < 0) {
-            this.points = 0;
+        if (this.stamina < 0) {
+            this.stamina = 0;
             this.dead = true;
         }
     }
@@ -134,7 +135,7 @@ class Player {
         currentCell.asked = true;
 
         if (currentCell.subject != "" && this.memory.includes(currentCell.subject)) {
-            player.points += 200;
+            player.coins += 2;
             grid.currentNumberOfNPCs--;
             //currentCell.generateQuestion();
             currentCell.answered = true;

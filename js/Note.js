@@ -18,15 +18,14 @@ class Note {
         let phrases = [
             `"...$adjective $noun..."`,
             `"...$verb $adjective $noun..."`,
-            `"...$noun $noun..."`,
             `"...$verb and $verb..."`,
+            `"...$verb or $verb..."`,
             `"...$noun of $noun..."`,
             `"...$adjective $noun of $noun..."`,
             `"...$noun and $noun..."`,
             `"...$verb the $noun..."`,
             `"...$adjective and $adjective $noun..."`,
             `"...$adjective, $adjective $noun..."`,
-            `"...$adjective $noun $noun..."`,
             `"...$verb, $verb, $verb..."`,
             `"...$adjective and $adjective..."`,
             `"...$adjective $noun and $noun..."`
@@ -49,9 +48,9 @@ class Note {
 
     open() {
 
-        if (player.points >= this.price) {
+        if (player.stamina >= this.price) {
             this.opened = true;
-            player.points -= this.price;
+            player.stamina -= this.price;
             player.memory = this.phrase;
         }
     }
@@ -60,7 +59,7 @@ class Note {
 
         if (this.opened) {
             return this.phrase;
-        } else if (!this.opened && player.points < this.price) {
+        } else if (!this.opened && player.stamina < this.price) {
             return "you need " + this.price + " " + symbols.heart + " to open this";
         } else if (!this.opened) {
             return "press o to open for " + this.price + " " + symbols.heart;
