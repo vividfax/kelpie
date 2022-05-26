@@ -575,7 +575,7 @@ class Grid {
                 if (targetY > j) translate(0, -worldHeight*cellSize);
                 else if (targetY < j) translate(0, worldHeight*cellSize);
 
-                this.grid[targetX][targetY].display();
+                if (!this.grid[targetX][targetY].fog) this.grid[targetX][targetY].display();
                 pop();
             }
         }
