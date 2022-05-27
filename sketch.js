@@ -35,7 +35,7 @@ const symbols = {
 };
 
 //const items = ["pickaxe5"];
-const items = ["pickaxe5", "building materials2"];
+const items = ["pickaxe3", "building materials2"];
 // const items = ["pickaxe3", "building materials2", "invisibility cloak1"];
 let landmarks;
 

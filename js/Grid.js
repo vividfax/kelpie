@@ -296,7 +296,7 @@ class Grid {
 
         let levelWidth = this.startingLevelWidth;
         let levelHeight = this.startingLevelHeight;
-        let wallWidth = 10;
+        let wallWidth = 1;
 
         for (let i = 0; i < this.width; i++) {
             for (let j = 0; j < this.height; j++) {
@@ -393,7 +393,7 @@ class Grid {
                 if (this.grid[targetX][targetY].fog) {
                     this.grid[targetX][targetY].fog = false;
 
-                    if (cell.height <= 0) this.clearFog(targetX, targetY);
+                    if (cell.height <= 0 && this.grid[targetX][targetY] instanceof Rock == false) this.clearFog(targetX, targetY);
                 }
             }
         }
@@ -504,7 +504,7 @@ class Grid {
 
         let levelWidth = this.startingLevelWidth;
         let levelHeight = this.startingLevelHeight;
-        let wallWidth = 10;
+        let wallWidth = 1;
 
         for (let i = 0; i < this.width; i++) {
             for (let j = 0; j < this.height; j++) {
