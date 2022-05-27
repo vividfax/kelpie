@@ -32,7 +32,7 @@ class House {
         if (this.height == 1 || this.height == 2 || this.height >= 5) {
             fill(palette.black);
         } else {
-            fill(palette.white);
+            fill(palette.trueBlack);
         }
 
         textSize(cellSize * 0.7);

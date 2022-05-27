@@ -4,13 +4,23 @@ const palette = {
 	trees: "#2F8C5F",
 	grass: "#A5C350",
 	sand: "#F2E0A1",
-	water: "#1B6193",
-	river: "#7197DF",
+	water: "#659FD3",
+	river: "#89C0F4",
 	white: "#FFFFFF",
 	black: "#4F4F4F",
-	fog: "#A5AAB0",
+	fog: "#E2E2E2",
 	ghosting: "#A5AAB0dd",
-	wall: "#333333"
+	wall: "#79706B",
+	height1: "#FFF8B1",
+	height2: "#C9EE8A",
+	height3: "#9EDC71",
+	height4: "#86C26C",
+	height5: "#6DA867",
+	height6: "#558E61",
+	height7: "#3D745C",
+	height8: "#255B57",
+	trueBlack: "#000000",
+	deepRed: "#770032",
 };
 
 const symbols = {
@@ -21,7 +31,7 @@ const symbols = {
 	house: "☗",
 	emptyHouse: "☖",
 	river: "~",
-	wall: "▞",
+	wall: "☷",
 	envelope: "✉",
 	openedLetter: "≋",
 	door: "⛩",
@@ -31,8 +41,11 @@ const symbols = {
 	building_materials: "⚒",
 	invisibility_cloak: "⛉",
 	people: ["𓀔", "𓀀", "𓀁", "𓀂", "𓀃", "𓀉", "𓁎", "𓀦"],
-	coin: "❂"
+	coin: "❂",
+	horse: "♞",
 };
+
+let images = {};
 
 //const items = ["pickaxe5"];
 const items = ["pickaxe3", "building materials2"];
@@ -65,6 +78,15 @@ function preload(){
 	nouns = loadStrings("txt/nouns.txt");
 
 	landmarks = loadJSON("landmarks.json");
+
+	images.height1 = loadImage("images/height1.png");
+	images.height2 = loadImage("images/height2.png");
+	images.height3 = loadImage("images/height3.png");
+	images.height4 = loadImage("images/height4.png");
+	images.height5 = loadImage("images/height5.png");
+	images.height6 = loadImage("images/height6.png");
+	images.height7 = loadImage("images/height7.png");
+	images.height8 = loadImage("images/height8.png");
 }
 
 function setup() {
@@ -83,6 +105,7 @@ function setup() {
 
 	angleMode(DEGREES);
 	textAlign(CENTER, CENTER);
+	imageMode(CENTER);
 	textFont("Fira Code");
 	noStroke();
 
@@ -129,13 +152,12 @@ function draw() {
 function displayUI() {
 
     push();
-	stroke(palette.black);
-	strokeWeight(80);
-	noFill();
-	rect(0, 20, width, height-40, 50);
+	rectMode(CENTER);
+	fill(palette.white);
+	rect(width/2, 50, 550, 70, 30);
 	pop();
 
-	fill(palette.white);
+	fill(palette.trueBlack);
 	textSize(20);
 
 	let topString = player.stamina + " " + symbols.heart;
@@ -150,7 +172,7 @@ function displayUI() {
 	if (player.memory != "nothing") topString += "\n" + player.memory;
 	else topString += "\n";
 
-	text(topString, width/2, 30);
+	text(topString, width/2, 50);
 
 	// let cornerString = "";
 
@@ -194,7 +216,15 @@ function displayToolip() {
     else if (currentCell instanceof NPC) tooltip = currentCell.getTooltip(true);
     else if (!hasMovedDiagonally && player.steps > 15) tooltip = "press two arrow keys at the same time to move diagonally";
 
-	text(tooltip, width/2, height - 30);
+	if (tooltip != "") {
+		push();
+		rectMode(CENTER);
+		fill(palette.white);
+		rect(width/2, height-50, 750, 70, 30);
+		pop();
+	}
+
+	text(tooltip, width/2, height - 50);
 }
 
 function keyPressed() {

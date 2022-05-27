@@ -86,8 +86,12 @@ class Shop {
 	    //translate(-cellSize/2, -cellSize/2);
         translate(-this.w/2 * cellSize + width/2, -this.h/2 * cellSize + height/2);
 
+        background(palette.black);
+
         for (let i = 0; i < this.w; i++) {
             for (let j = 0; j < this.h; j++) {
+
+                if (this.grid[i][j] instanceof Rock) continue;
 
                 this.grid[i][j].display();
             }

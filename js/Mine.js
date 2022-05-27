@@ -14,15 +14,21 @@ class Mine {
     display() {
 
         if (this.height == 1) {
-            fill(palette.sand);
+            fill(palette.height1);
         } else if (this.height == 2) {
-            fill(palette.grass);
+            fill(palette.height2);
         } else if (this.height == 3) {
-            fill(palette.trees);
+            fill(palette.height3);
         } else if (this.height == 4) {
-            fill(palette.mountain);
-        } else if (this.height >= 5) {
-            fill(palette.snow);
+            fill(palette.height4);
+        } else if (this.height == 5) {
+            fill(palette.height5);
+        } else if (this.height == 6) {
+            fill(palette.height6);
+        } else if (this.height == 7) {
+            fill(palette.height7);
+        } else if (this.height == 8) {
+            fill(palette.height8);
         }
 
         if (this.eaten) {
@@ -31,10 +37,8 @@ class Mine {
 
         rect(this.x, this.y, cellSize);
 
-        if (this.height == 1 || this.height == 2 || this.height >= 5) {
-            fill(palette.black);
-        } else {
-            fill(palette.white);
+        if (this.height > 0) {
+            fill(palette.deepRed);
         }
 
         textSize(cellSize * 0.6);

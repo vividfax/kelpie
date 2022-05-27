@@ -9,7 +9,7 @@ class Player {
         this.cameraX = 0;
         this.cameraY = 0;
         this.reset();
-        this.symbol = symbols.smiley;
+        this.symbol = symbols.horse;
         this.stamina = 5;
         this.coins = 0;
         this.dead = false;
@@ -165,9 +165,9 @@ class Player {
             rotate(180);
         }
 
-        fill(palette.white);
+        fill(palette.trueBlack);
         textSize(cellSize);
-        text(this.symbol, 0, this.jumpOffset);
+        text(this.symbol, 0, this.jumpOffset + cellSize/9);
 
         pop();
     }
