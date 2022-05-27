@@ -103,7 +103,7 @@ class Player {
             this.stamina -= cell.height;
         } else if (cell instanceof Mine && !cell.eaten) {
             cell.eaten = true;
-            this.stamina += 2;
+            this.stamina += 1;
         } else if (cell instanceof Note && cell.opened) {
             this.memory = cell.phrase;
         } else if (cell instanceof Rock && !cell.eaten) {

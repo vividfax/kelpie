@@ -10,7 +10,7 @@ class Note {
         this.fog = true;
         this.opened = false;
         this.phrase = this.makePhrase();
-        this.price = this.phrase.length-8;
+        this.price = int((this.phrase.length-8)/2);
         this.eaten = false;
     }
 

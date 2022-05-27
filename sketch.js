@@ -322,6 +322,9 @@ function keyReleased() {
 		return;
 	}
 
+    // let newCurrentCell = grid.grid[player.x][player.y];
+	// if (newCurrentCell instanceof House && player.stamina < 5) player.stamina = 5;
+
     draw();
 }
 
