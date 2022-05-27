@@ -7,8 +7,8 @@ class Grid {
         this.grid = this.new2dArray();
         this.mineDensity = 0.2;
 
-        this.startingLevelWidth = 30;
-        this.startingLevelHeight = 20;
+        this.startingLevelWidth = 24;
+        this.startingLevelHeight = 18;
 
         this.currentNumberOfNPCs = 0;
 
@@ -76,7 +76,7 @@ class Grid {
                     rocksGrid[i][j] = false;
                 }
 
-                if (i > worldWidth/2 - 40 && i < worldWidth/2 + 40 && j > worldHeight/2 - 40 && j < worldHeight/2 + 40) rocksGrid[i][j] = false;
+                if (i > worldWidth/2 - this.startingLevelWidth && i < worldWidth/2 + this.startingLevelWidth && j > worldHeight/2 - this.startingLevelHeight && j < worldHeight/2 + this.startingLevelHeight) rocksGrid[i][j] = false;
             }
         }
 
@@ -194,7 +194,7 @@ class Grid {
 
     generateDeserts() {
 
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 400; i++) {
 
             let randomX = int(random(worldWidth));
             let randomY = int(random(worldHeight));
@@ -222,7 +222,7 @@ class Grid {
 
     generateLakes() {
 
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 400; i++) {
 
             let randomX = int(random(worldWidth));
             let randomY = int(random(worldHeight));
@@ -250,9 +250,9 @@ class Grid {
 
     placeLandmarks() {
 
-        for (let i = 0; i < landmarks.landmarks.length; i++) {
+        for (let i = 0; i < 100; i++) {
 
-            let landmark = landmarks.landmarks[i];
+            let landmark = random(landmarks.landmarks);
             let xPositon = int(random(worldWidth));
             let yPosition = int(random(worldHeight));
 
@@ -449,7 +449,7 @@ class Grid {
                 let cell = this.grid[i][j];
 
                 if (i > worldWidth/2 - this.startingLevelWidth/2 && i < worldWidth/2 + this.startingLevelWidth/2 && j > worldHeight/2 - this.startingLevelHeight/2 && j < worldHeight/2 + this.startingLevelHeight/2) {
-                    if (int(random(10)) == 1 && cell instanceof EmptyCell && cell.height == 0) {
+                    if (int(random(5)) == 1 && cell instanceof EmptyCell && cell.height == 0) {
                         this.grid[i][j] = new Note(i, j, 0);
                     }
                 }
@@ -475,7 +475,7 @@ class Grid {
                 let cell = this.grid[i][j];
 
                 if (i > worldWidth/2 - this.startingLevelWidth/2 && i < worldWidth/2 + this.startingLevelWidth/2 && j > worldHeight/2 - this.startingLevelHeight/2 && j < worldHeight/2 + this.startingLevelHeight/2) {
-                    if (int(random(10)) == 1 && (cell instanceof EmptyCell && cell.height == 0)) {
+                    if (int(random(5)) == 1 && (cell instanceof EmptyCell && cell.height == 0)) {
                         this.grid[i][j] = new NPC(i, j, 0);
                         this.currentNumberOfNPCs++;
                     }

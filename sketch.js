@@ -355,8 +355,8 @@ function displayMap() {
 	translate(-worldWidth/2/2, -worldHeight/2/2);
 	background(palette.fog);
 
-	for (let i = 0; i < worldWidth; i+=8) {
-		for (let j = 0; j < worldHeight; j+=8) {
+	for (let i = 0; i < worldWidth; i+=2) {
+		for (let j = 0; j < worldHeight; j+=2) {
 
 			let cell = grid.grid[i][j];
 			if (cell.fog) continue;
@@ -373,12 +373,14 @@ function displayMap() {
 			else if (cell.height == 1) fill(palette.sand);
 			else if (cell.height == 0) fill(palette.water);
 
-			rect(i/2, j/2, 4)
+			rect(i/2, j/2, 1)
 		}
 	}
 
-	fill(palette.white);
-	rect(round(player.x/8) * 8/2, round(player.y/8) * 8/2, 4)
+	fill(palette.trueBlack);
+	stroke(palette.trueBlack);
+	strokeWeight(6);
+	rect(round(player.x/8) * 8/2, round(player.y/8) * 8/2, 1)
 
 	pop();
 }
