@@ -7,8 +7,8 @@ class Grid {
         this.grid = this.new2dArray();
         this.mineDensity = 0.2;
 
-        this.startingLevelWidth = 60;
-        this.startingLevelHeight = 40;
+        this.startingLevelWidth = 40;
+        this.startingLevelHeight = 30;
 
         this.currentNumberOfNPCs = 0;
 
