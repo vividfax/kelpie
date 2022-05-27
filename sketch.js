@@ -97,9 +97,6 @@ function setup() {
 	shuffle(verbs, true);
 	shuffle(adjectives, true);
 	shuffle(nouns, true);
-	verbs = verbs.slice(0, 5);
-	adjectives = adjectives.slice(0, 5);
-	nouns = nouns.slice(0, 5);
 
 	createCanvas(windowWidth, windowHeight);
 
@@ -379,8 +376,8 @@ function displayMap() {
 
 	fill(palette.trueBlack);
 	stroke(palette.trueBlack);
-	strokeWeight(6);
-	rect(round(player.x/8) * 8/2, round(player.y/8) * 8/2, 1)
+	strokeWeight(5);
+	rect(round(player.x/8) * 8/2, round(player.y/8) * 8/2, 1, 1, 100)
 
 	pop();
 }

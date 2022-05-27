@@ -1,10 +1,11 @@
 class NPC {
 
-    constructor(x, y, h) {
+    constructor(x, y, h, vocabSize) {
 
         this.x = x * cellSize;
         this.y = y * cellSize;
         this.height = h;
+        this.vocabSize = vocabSize;
         this.symbol = random(symbols.people);
         this.fog = true;
         this.subject;
@@ -18,16 +19,26 @@ class NPC {
 
     generateQuestion() {
 
+        let n = nouns;
+        let v = verbs;
+        let a = adjectives;
+
+        if (this.vocabSize != -1) {
+            n = nouns.slice(0, this.vocabSize);
+            v = verbs.slice(0, this.vocabSize);
+            a = adjectives.slice(0, this.vocabSize);
+        }
+
         let randomInt = int(random(3));
 
         if (randomInt == 0) {
-            this.subject = random(nouns);
+            this.subject = random(n);
             this.question = '"What of my ' + this.subject + '?"';
         } else if (randomInt == 1) {
-            this.subject = random(verbs);
+            this.subject = random(v);
             this.question = '"Did I ' + this.subject + '?"';
         } else if (randomInt == 2) {
-            this.subject = random(adjectives);
+            this.subject = random(a);
             this.question = '"Was I ' + this.subject + '?"';
         }
     }

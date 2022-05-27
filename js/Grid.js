@@ -322,7 +322,7 @@ class Grid {
                 this.grid[int(x)+i][int(y)+j] = new EmptyCell(int(x)+i, int(y)+j);
 
                 if (i == j) continue;
-                if (index == notePosition && radius == 1 && x == this.width/2 && y == this.height/2) this.grid[int(x)+i][int(y)+j] = new Note(int(x)+i, int(y)+j, 0);
+                if (index == notePosition && radius == 1 && x == this.width/2 && y == this.height/2) this.grid[int(x)+i][int(y)+j] = new Note(int(x)+i, int(y)+j, 0, 5);
                 index++;
             }
         }
@@ -450,7 +450,7 @@ class Grid {
 
                 if (i > worldWidth/2 - this.startingLevelWidth/2 && i < worldWidth/2 + this.startingLevelWidth/2 && j > worldHeight/2 - this.startingLevelHeight/2 && j < worldHeight/2 + this.startingLevelHeight/2) {
                     if (int(random(5)) == 1 && cell instanceof EmptyCell && cell.height == 0) {
-                        this.grid[i][j] = new Note(i, j, 0);
+                        this.grid[i][j] = new Note(i, j, 0, 5);
                     }
                 }
 
@@ -459,7 +459,7 @@ class Grid {
                     let h = cell.height;
                     if (cell instanceof Rock) h = -1;
 
-                    this.grid[i][j] = new Note(i, j, h);
+                    this.grid[i][j] = new Note(i, j, h, -1);
                 }
             }
         }
@@ -476,7 +476,7 @@ class Grid {
 
                 if (i > worldWidth/2 - this.startingLevelWidth/2 && i < worldWidth/2 + this.startingLevelWidth/2 && j > worldHeight/2 - this.startingLevelHeight/2 && j < worldHeight/2 + this.startingLevelHeight/2) {
                     if (int(random(5)) == 1 && (cell instanceof EmptyCell && cell.height == 0)) {
-                        this.grid[i][j] = new NPC(i, j, 0);
+                        this.grid[i][j] = new NPC(i, j, 0, 5);
                         this.currentNumberOfNPCs++;
                     }
                     continue;
@@ -486,7 +486,7 @@ class Grid {
                     let h = cell.height;
                     if (cell instanceof Rock) h = -1;
 
-                    this.grid[i][j] = new NPC(i, j, h);
+                    this.grid[i][j] = new NPC(i, j, h, -1);
                     this.currentNumberOfNPCs++;
                 }
             }

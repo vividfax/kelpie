@@ -1,10 +1,11 @@
 class Note {
 
-    constructor(x, y, h) {
+    constructor(x, y, h, vocabSize) {
 
         this.x = x * cellSize;
         this.y = y * cellSize;
         this.height = h;
+        this.vocabSize = vocabSize;
         this.symbol = symbols.envelope;
         this.fog = true;
         this.opened = false;
@@ -14,6 +15,16 @@ class Note {
     }
 
     makePhrase() {
+
+        let n = nouns;
+        let v = verbs;
+        let a = adjectives;
+
+        if (this.vocabSize != -1) {
+            n = nouns.slice(0, this.vocabSize);
+            v = verbs.slice(0, this.vocabSize);
+            a = adjectives.slice(0, this.vocabSize);
+        }
 
         let phrases = [
             `"...$adjective $noun..."`,
@@ -33,15 +44,15 @@ class Note {
 
         let phrase = random(phrases);
 
-        phrase = phrase.replace("$noun", random(nouns));
-        phrase = phrase.replace("$noun", random(nouns));
-        phrase = phrase.replace("$noun", random(nouns));
-        phrase = phrase.replace("$verb", random(verbs));
-        phrase = phrase.replace("$verb", random(verbs));
-        phrase = phrase.replace("$verb", random(verbs));
-        phrase = phrase.replace("$adjective", random(adjectives));
-        phrase = phrase.replace("$adjective", random(adjectives));
-        phrase = phrase.replace("$adjective", random(adjectives));
+        phrase = phrase.replace("$noun", random(n));
+        phrase = phrase.replace("$noun", random(n));
+        phrase = phrase.replace("$noun", random(n));
+        phrase = phrase.replace("$verb", random(v));
+        phrase = phrase.replace("$verb", random(v));
+        phrase = phrase.replace("$verb", random(v));
+        phrase = phrase.replace("$adjective", random(a));
+        phrase = phrase.replace("$adjective", random(a));
+        phrase = phrase.replace("$adjective", random(a));
 
         return phrase;
     }
