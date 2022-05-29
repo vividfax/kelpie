@@ -330,8 +330,6 @@ function keyReleased() {
 
 function reset() {
 
-    player.dead = false;
-    player.stamina = 5;
     grid.reset();
     player.reset();
 }

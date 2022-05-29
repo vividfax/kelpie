@@ -28,6 +28,8 @@ class Player {
 
     reset() {
 
+        this.dead = false;
+
         this.x = int(worldWidth/2);
         this.y = int(worldHeight/2);
         this.cameraX = 0;
@@ -39,6 +41,9 @@ class Player {
             building_materials: 0,
             invisibility_cloak: 0
         }
+
+        this.coins = 0;
+        this.stamina = 5;
     }
 
     move(x, y) {

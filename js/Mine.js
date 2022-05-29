@@ -27,7 +27,7 @@ class Mine {
             fill(palette.height6);
         } else if (this.height == 7) {
             fill(palette.height7);
-        } else if (this.height == 8) {
+        } else if (this.height >= 8) {
             fill(palette.height8);
         }
 
