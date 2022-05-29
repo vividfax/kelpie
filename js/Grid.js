@@ -250,7 +250,7 @@ class Grid {
 
     placeLandmarks() {
 
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < 500; i++) {
 
             let landmark = random(landmarks.landmarks);
             let xPositon = int(random(worldWidth));
