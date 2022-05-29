@@ -4,14 +4,12 @@ build
 cure
 dazzle
 defeat
-die
 drown
 fall
 float
 follow
 heal
 jump
-kill
 leap
 leave
 marry
