@@ -169,15 +169,15 @@ class Grid {
         for (let i = 0; i < this.width; i++) {
             for (let j = 0; j < this.height; j++) {
 
-                if (i > this.width/2 - this.startingLevelWidth*0.2 && i < this.width/2 + this.startingLevelWidth*0.2 && j > this.height/2 - this.startingLevelHeight*0.3 && j < this.height/2 + this.startingLevelHeight*0.3) {
-                    if (int(random(4)) == 0) {
+                if (i > this.width/2 - this.startingLevelWidth*0.28 && i < this.width/2 + this.startingLevelWidth*0.28 && j > this.height/2 - this.startingLevelHeight*0.35 && j < this.height/2 + this.startingLevelHeight*0.35) {
+                    if (int(random(2.5)) == 0) {
                         this.grid[i][j] = new Mine(i, j);
                     }
                     continue;
                 }
 
                 if (i > this.width/2 - this.startingLevelWidth && i < this.width/2 + this.startingLevelWidth && j > this.height/2 - this.startingLevelHeight && j < this.height/2 + this.startingLevelHeight) {
-                    if (int(random(5)) == 0) {
+                    if (int(random(4)) == 0) {
                         this.grid[i][j] = new Mine(i, j);
                     }
                     continue;
@@ -322,7 +322,7 @@ class Grid {
                 this.grid[int(x)+i][int(y)+j] = new EmptyCell(int(x)+i, int(y)+j);
 
                 if (i == j) continue;
-                if (index == notePosition && radius == 1 && x == this.width/2 && y == this.height/2) this.grid[int(x)+i][int(y)+j] = new Note(int(x)+i, int(y)+j, 0, 4);
+                if (index == notePosition && radius == 1 && x == this.width/2 && y == this.height/2) this.grid[int(x)+i][int(y)+j] = new Note(int(x)+i, int(y)+j, 0, 3);
                 index++;
             }
         }
@@ -444,13 +444,13 @@ class Grid {
         for (let i = 0; i < this.width; i++) {
             for (let j = 0; j < this.height; j++) {
 
-                if (i > worldWidth/2 - 8 && i < worldWidth/2 + 8 && j > worldHeight/2 - 8 && j < worldHeight/2 + 8) continue;
+                if (i > worldWidth/2 - 6 && i < worldWidth/2 + 6 && j > worldHeight/2 - 6 && j < worldHeight/2 + 6) continue;
 
                 let cell = this.grid[i][j];
 
-                if (i > worldWidth/2 - this.startingLevelWidth/2 && i < worldWidth/2 + this.startingLevelWidth/2 && j > worldHeight/2 - this.startingLevelHeight/2 && j < worldHeight/2 + this.startingLevelHeight/2) {
-                    if (int(random(5)) == 1 && cell instanceof EmptyCell && cell.height == 0) {
-                        this.grid[i][j] = new Note(i, j, 0, 4);
+                if (i > worldWidth/2 - this.startingLevelWidth/2-1 && i < worldWidth/2 + this.startingLevelWidth/2+1 && j > worldHeight/2 - this.startingLevelHeight/2-1 && j < worldHeight/2 + this.startingLevelHeight/2+1) {
+                    if (int(random(4)) == 0 && cell instanceof EmptyCell && cell.height == 0) {
+                        this.grid[i][j] = new Note(i, j, 0, 3);
                     }
                 }
 
@@ -470,13 +470,13 @@ class Grid {
         for (let i = 0; i < this.width; i++) {
             for (let j = 0; j < this.height; j++) {
 
-                if (i > worldWidth/2 - 8 && i < worldWidth/2 + 8 && j > worldHeight/2 - 8 && j < worldHeight/2 + 8) continue;
+                if (i > worldWidth/2 - 6 && i < worldWidth/2 + 6 && j > worldHeight/2 - 6 && j < worldHeight/2 + 6) continue;
 
                 let cell = this.grid[i][j];
 
-                if (i > worldWidth/2 - this.startingLevelWidth/2 && i < worldWidth/2 + this.startingLevelWidth/2 && j > worldHeight/2 - this.startingLevelHeight/2 && j < worldHeight/2 + this.startingLevelHeight/2) {
-                    if (int(random(5)) == 1 && (cell instanceof EmptyCell && cell.height == 0)) {
-                        this.grid[i][j] = new NPC(i, j, 0, 4);
+                if (i > worldWidth/2 - this.startingLevelWidth/2-1 && i < worldWidth/2 + this.startingLevelWidth/2+1 && j > worldHeight/2 - this.startingLevelHeight/2-1 && j < worldHeight/2 + this.startingLevelHeight/2+1) {
+                    if (int(random(4)) == 0 && (cell instanceof EmptyCell && cell.height == 0)) {
+                        this.grid[i][j] = new NPC(i, j, 0, 3);
                         this.currentNumberOfNPCs++;
                     }
                     continue;
